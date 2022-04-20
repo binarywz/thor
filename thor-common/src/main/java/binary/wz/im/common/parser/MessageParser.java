@@ -1,6 +1,6 @@
 package binary.wz.im.common.parser;
 
-import binary.wz.im.common.constant.MsgTypeEnum;
+import binary.wz.im.common.constant.MsgType;
 import binary.wz.im.common.exception.ImException;
 import binary.wz.im.common.proto.Ack;
 import binary.wz.im.common.proto.Chat;
@@ -18,17 +18,17 @@ import java.util.Map;
  */
 public class MessageParser {
 
-    private Map<MsgTypeEnum, Parser> parserMap;
+    private Map<MsgType, Parser> parserMap;
 
     public MessageParser() {
-        this.parserMap = new HashMap<>(MsgTypeEnum.values().length);
-        this.parserMap.put(MsgTypeEnum.CHAT, Chat.ChatMsg::parseFrom);
-        this.parserMap.put(MsgTypeEnum.ACK, Ack.AckMsg::parseFrom);
-        this.parserMap.put(MsgTypeEnum.INTERNAL, Internal.InternalMsg::parseFrom);
+        this.parserMap = new HashMap<>(MsgType.values().length);
+        this.parserMap.put(MsgType.CHAT, Chat.ChatMsg::parseFrom);
+        this.parserMap.put(MsgType.ACK, Ack.AckMsg::parseFrom);
+        this.parserMap.put(MsgType.INTERNAL, Internal.InternalMsg::parseFrom);
     }
 
     public Message parseMessage(int code, byte[] bytes) throws InvalidProtocolBufferException {
-        MsgTypeEnum msgType = MsgTypeEnum.getByCode(code);
+        MsgType msgType = MsgType.getByCode(code);
         Parser parser = parserMap.get(msgType);
         if (parser == null) {
             throw new ImException("[MessageParser], no proper parse function, msgType: " + msgType.name());

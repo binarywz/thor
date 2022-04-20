@@ -1,6 +1,6 @@
 package binary.wz.im.common.codec;
 
-import binary.wz.im.common.constant.MsgTypeEnum;
+import binary.wz.im.common.constant.MsgType;
 import com.google.protobuf.Message;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -21,7 +21,7 @@ public class MsgEncoder extends MessageToByteEncoder<Message> {
     protected void encode(ChannelHandlerContext ctx, Message msg, ByteBuf out) throws Exception {
         try {
             byte[] bytes = msg.toByteArray();
-            int code = MsgTypeEnum.getByClass(msg.getClass()).getCode();
+            int code = MsgType.getByClass(msg.getClass()).getCode();
             int len = bytes.length;
 
             ByteBuf buf = Unpooled.buffer(8 + len);

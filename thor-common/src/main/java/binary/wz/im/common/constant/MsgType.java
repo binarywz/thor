@@ -11,7 +11,7 @@ import java.util.stream.Stream;
  * @date 2022/4/17 22:37
  * @description: 消息类型
  */
-public enum MsgTypeEnum {
+public enum MsgType {
 
     /**
      * 聊天消息
@@ -31,17 +31,17 @@ public enum MsgTypeEnum {
     int code;
     Class<?> clazz;
 
-    MsgTypeEnum(int code, Class<?> clazz) {
+    MsgType(int code, Class<?> clazz) {
         this.code = code;
         this.clazz = clazz;
     }
 
-    public static MsgTypeEnum getByCode(int code) {
+    public static MsgType getByCode(int code) {
         return Stream.of(values()).filter(item -> item.code == code)
                 .findFirst().orElseThrow(IllegalArgumentException::new);
     }
 
-    public static MsgTypeEnum getByClass(Class<?> clazz) {
+    public static MsgType getByClass(Class<?> clazz) {
         return Stream.of(values()).filter(item -> item.clazz == clazz)
                 .findFirst().orElseThrow(IllegalArgumentException::new);
     }
