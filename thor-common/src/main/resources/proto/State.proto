@@ -1,9 +1,9 @@
 syntax = "proto2";
 
 package binary.wz.im.common.proto;
-option java_outer_classname = "Ack";
+option java_outer_classname = "State";
 
-message AckMsg {
+message StateMsg {
     required int32 version = 1;
     //协议版本号。第一版本：1，以此类推。
 
@@ -25,7 +25,7 @@ message AckMsg {
     required MsgType msgType = 7;
     //消息类型
 
-    required int64 ackMsgId = 8;
+    required int64 stateMsgId = 8;
     //消息体
 
     enum DestType {

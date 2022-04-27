@@ -11,6 +11,8 @@
     <modules>
         <module>thor-common</module>
         <module>thor-session</module>
+        <module>thor-transfer</module>
+        <module>thor-status</module>
     </modules>
 
     <properties>
@@ -168,6 +170,16 @@
             <dependency>
                 <groupId>binary.wz.im</groupId>
                 <artifactId>thor-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>binary.wz.im</groupId>
+                <artifactId>thor-status</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>binary.wz.im</groupId>
+                <artifactId>thor-session</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

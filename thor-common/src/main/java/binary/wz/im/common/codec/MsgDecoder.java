@@ -53,5 +53,4 @@ public class MsgDecoder extends ByteToMessageDecoder {
         Message m = messageParser.parseMessage(code, body);
         out.add(m);
     }
-
 }

@@ -2,12 +2,11 @@ package binary.wz.im.session.ack;
 
 import binary.wz.im.common.exception.ImException;
 import binary.wz.im.common.proto.Internal;
-import binary.wz.im.session.processor.SndMsgProcessor;
+import binary.wz.im.session.processor.SndMessageProcessor;
 import com.google.protobuf.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.sql.rowset.serial.SerialException;
 import java.io.Serializable;
 import java.time.Duration;
 import java.util.Map;
@@ -45,7 +44,7 @@ public class SndAckWindow {
      * key: 消息Id
      * value: ack processor，处理未收到ack的消息
      */
-    private ConcurrentHashMap<Long, SndMsgProcessor<Internal.InternalMsg>> sndMsgProcessorMap;
+    private ConcurrentHashMap<Long, SndMessageProcessor<Internal.InternalMsg>> sndMsgProcessorMap;
 
     static {
         windowMap = new ConcurrentHashMap<>();
@@ -75,10 +74,10 @@ public class SndAckWindow {
             future.completeExceptionally(new ImException("snd window is full"));
             return future;
         }
-        SndMsgProcessor<Internal.InternalMsg> sndMsgProcessor = new SndMsgProcessor<>(sndMessage, sndFunction);
-        sndMsgProcessor.send();
-        sndMsgProcessorMap.put(mid, sndMsgProcessor);
-        return sndMsgProcessor.getFuture();
+        SndMessageProcessor<Internal.InternalMsg> sndMessageProcessor = new SndMessageProcessor<>(sndMessage, sndFunction);
+        sndMessageProcessor.send();
+        sndMsgProcessorMap.put(mid, sndMessageProcessor);
+        return sndMessageProcessor.getFuture();
     }
 
     /**
@@ -113,12 +112,12 @@ public class SndAckWindow {
         }
     }
 
-    private void retry(Long id, SndMsgProcessor<?> processor) {
+    private void retry(Long id, SndMessageProcessor<?> processor) {
         logger.warn("retry send msg: {}", id);
         processor.send();
     }
 
-    private boolean timeout(SndMsgProcessor processor) {
+    private boolean timeout(SndMessageProcessor processor) {
         return processor.getSndTime().get() != 0 && processor.timeElapse() > timeout.toNanos();
     }
 

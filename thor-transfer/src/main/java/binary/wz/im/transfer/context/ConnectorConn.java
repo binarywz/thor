@@ -1,5 +1,7 @@
-package binary.wz.im.session.conn;
+package binary.wz.im.transfer.context;
 
+import binary.wz.im.session.conn.AbstractConn;
+import binary.wz.im.session.conn.Conn;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.io.Serializable;
@@ -19,5 +21,4 @@ public class ConnectorConn extends AbstractConn {
     protected Serializable generateNetId(ChannelHandlerContext ctx) {
         return ctx.channel().attr(Conn.NET_ID).get();
     }
-
 }

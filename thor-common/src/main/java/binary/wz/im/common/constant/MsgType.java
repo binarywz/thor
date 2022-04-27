@@ -1,8 +1,8 @@
 package binary.wz.im.common.constant;
 
-import binary.wz.im.common.proto.Ack;
 import binary.wz.im.common.proto.Chat;
 import binary.wz.im.common.proto.Internal;
+import binary.wz.im.common.proto.State;
 
 import java.util.stream.Stream;
 
@@ -24,9 +24,9 @@ public enum MsgType {
     INTERNAL(1, Internal.InternalMsg.class),
 
     /**
-     * ACK消息，如已读/已投递
+     * STATE消息，如已读/已投递
      */
-    ACK(2, Ack.AckMsg.class);
+    STATE(2, State.StateMsg.class);
 
     int code;
     Class<?> clazz;

@@ -32,6 +32,5 @@ public class MsgEncoder extends MessageToByteEncoder<Message> {
         } catch (Exception e) {
             logger.error("[IM MsgEncoder] msg encode has error", e);
         }
-
     }
 }

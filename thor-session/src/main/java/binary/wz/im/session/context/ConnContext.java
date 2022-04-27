@@ -1,5 +1,6 @@
-package binary.wz.im.session.conn;
+package binary.wz.im.session.context;
 
+import binary.wz.im.session.conn.Conn;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.io.Serializable;

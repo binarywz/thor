@@ -14,8 +14,8 @@ import java.util.function.Consumer;
  * @date 2022/4/20 0:06
  * @description: 消息(处理器)，处理未收到ACK的消息
  */
-public class SndMsgProcessor<T extends Message> {
-    private static Logger logger = LoggerFactory.getLogger(SndMsgProcessor.class);
+public class SndMessageProcessor<T extends Message> {
+    private static Logger logger = LoggerFactory.getLogger(SndMessageProcessor.class);
 
     private Message sndMessage;
     private Consumer<Message> sndFunction;
@@ -24,7 +24,7 @@ public class SndMsgProcessor<T extends Message> {
     private volatile AtomicLong sndTime;
     private volatile AtomicBoolean sending;
 
-    public SndMsgProcessor(Message sndMessage, Consumer<Message> sndFunction) {
+    public SndMessageProcessor(Message sndMessage, Consumer<Message> sndFunction) {
         this.sndMessage = sndMessage;
         this.sndFunction = sndFunction;
         this.future = new CompletableFuture<>();

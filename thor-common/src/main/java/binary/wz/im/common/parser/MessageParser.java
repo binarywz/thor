@@ -2,9 +2,9 @@ package binary.wz.im.common.parser;
 
 import binary.wz.im.common.constant.MsgType;
 import binary.wz.im.common.exception.ImException;
-import binary.wz.im.common.proto.Ack;
 import binary.wz.im.common.proto.Chat;
 import binary.wz.im.common.proto.Internal;
+import binary.wz.im.common.proto.State;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message;
 
@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * @author binarywz
  * @date 2022/4/17 22:48
- * @description: 解析CHAT/ACK/INTERNAL三种Protobuf Message
+ * @description: 解析CHAT/STATE/INTERNAL三种Protobuf Message
  */
 public class MessageParser {
 
@@ -23,7 +23,7 @@ public class MessageParser {
     public MessageParser() {
         this.parserMap = new HashMap<>(MsgType.values().length);
         this.parserMap.put(MsgType.CHAT, Chat.ChatMsg::parseFrom);
-        this.parserMap.put(MsgType.ACK, Ack.AckMsg::parseFrom);
+        this.parserMap.put(MsgType.STATE, State.StateMsg::parseFrom);
         this.parserMap.put(MsgType.INTERNAL, Internal.InternalMsg::parseFrom);
     }
 
@@ -34,6 +34,26 @@ public class MessageParser {
             throw new ImException("[MessageParser], no proper parse function, msgType: " + msgType.name());
         }
         return parser.process(bytes);
+    }
+
+    public static void validateFrom(Message message, Internal.InternalMsg.Module module) {
+        if (message instanceof Internal.InternalMsg) {
+            Internal.InternalMsg m = (Internal.InternalMsg) message;
+            if (m.getFrom() != module) {
+                throw new ImException("[unexpected msg] expect msg from: " + module.name() +
+                        ", but received msg from: " + m.getFrom().name() + "\n\rmsg: " + m.toString());
+            }
+        }
+    }
+
+    public static void validateDest(Message message, Internal.InternalMsg.Module module) {
+        if (message instanceof Internal.InternalMsg) {
+            Internal.InternalMsg m = (Internal.InternalMsg) message;
+            if (m.getDest() != module) {
+                throw new ImException("[unexpected msg] expect msg to: " + module.name() +
+                        ", but received msg to: " + m.getFrom().name());
+            }
+        }
     }
 
     @FunctionalInterface

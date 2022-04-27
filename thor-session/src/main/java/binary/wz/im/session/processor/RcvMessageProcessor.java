@@ -14,7 +14,7 @@ import java.util.function.Consumer;
  * @date 2022/4/19 23:34
  * @description: 消息(接收)处理器，接收到消息后响应ACK
  */
-public class RcvMsgProcessor {
+public class RcvMessageProcessor {
 
     private Long mid;
     private Internal.InternalMsg.Module from;
@@ -25,8 +25,8 @@ public class RcvMsgProcessor {
     private Message message;
     private Consumer<Message> consumer;
 
-    public RcvMsgProcessor(Long mid, Internal.InternalMsg.Module from, Internal.InternalMsg.Module dest,
-                           ChannelHandlerContext ctx, Message message, Consumer<Message> consumer) {
+    public RcvMessageProcessor(Long mid, Internal.InternalMsg.Module from, Internal.InternalMsg.Module dest,
+                               ChannelHandlerContext ctx, Message message, Consumer<Message> consumer) {
         this.mid = mid;
         this.from = from;
         this.dest = dest;

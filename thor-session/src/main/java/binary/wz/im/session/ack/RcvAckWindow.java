@@ -3,7 +3,7 @@ package binary.wz.im.session.ack;
 import binary.wz.im.common.constant.MsgVersion;
 import binary.wz.im.common.exception.ImException;
 import binary.wz.im.common.proto.Internal;
-import binary.wz.im.session.processor.RcvMsgProcessor;
+import binary.wz.im.session.processor.RcvMessageProcessor;
 import binary.wz.im.session.util.IdWorker;
 import com.google.protobuf.Message;
 import io.netty.channel.ChannelHandlerContext;
@@ -33,7 +33,7 @@ public class RcvAckWindow {
     /**
      * 接收方消息暂存Map，处理乱序消息
      */
-    private ConcurrentHashMap<Long, RcvMsgProcessor> notContinuousMap;
+    private ConcurrentHashMap<Long, RcvMessageProcessor> notContinuousMap;
 
     public RcvAckWindow(int maxSize) {
         this.first = new AtomicBoolean(true);
@@ -62,21 +62,21 @@ public class RcvAckWindow {
             future.complete(null);
             return future;
         }
-        RcvMsgProcessor rcvMsgProcessor = new RcvMsgProcessor(mid, from, dest, ctx, rcvMessage, rcvFunction);
+        RcvMessageProcessor rcvMessageProcessor = new RcvMessageProcessor(mid, from, dest, ctx, rcvMessage, rcvFunction);
         if (!isContinuous(mid)) {
             if (notContinuousMap.size() >= maxSize) {
                 CompletableFuture<Void> future = new CompletableFuture<>();
                 future.completeExceptionally(new ImException("rcv window is full"));
                 return future;
             }
-            notContinuousMap.put(mid, rcvMsgProcessor);
-            return rcvMsgProcessor.getFuture();
+            notContinuousMap.put(mid, rcvMessageProcessor);
+            return rcvMessageProcessor.getFuture();
         }
         // 处理消息
-        return processAsync(rcvMsgProcessor);
+        return processAsync(rcvMessageProcessor);
     }
 
-    private CompletableFuture<Void> processAsync(RcvMsgProcessor processor) {
+    private CompletableFuture<Void> processAsync(RcvMessageProcessor processor) {
         return CompletableFuture
                 .runAsync(processor::process)
                 .thenAccept(ignore -> {
@@ -91,7 +91,7 @@ public class RcvAckWindow {
                     Long nextId = nextId(processor.getId());
                     if (notContinuousMap.containsKey(nextId)) {
                         // there is a next msg waiting in the map
-                        RcvMsgProcessor nextProcessor = notContinuousMap.get(nextId);
+                        RcvMessageProcessor nextProcessor = notContinuousMap.get(nextId);
                         return processAsync(nextProcessor);
                     } else {
                         // that's the newest msg
