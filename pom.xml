@@ -13,6 +13,7 @@
         <module>thor-session</module>
         <module>thor-transfer</module>
         <module>thor-status</module>
+        <module>thor-connector</module>
     </modules>
 
     <properties>

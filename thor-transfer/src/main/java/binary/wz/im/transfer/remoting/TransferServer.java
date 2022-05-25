@@ -1,4 +1,4 @@
-package binary.wz.im.transfer.server;
+package binary.wz.im.transfer.remoting;
 
 import binary.wz.im.common.codec.MsgDecoder;
 import binary.wz.im.common.codec.MsgEncoder;
@@ -29,7 +29,7 @@ import java.util.concurrent.TimeoutException;
 public class TransferServer {
     private static Logger logger = LoggerFactory.getLogger(TransferServer.class);
 
-    public static void start(int port) {
+    public static void start() {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workGroup = new NioEventLoopGroup();
 
@@ -45,9 +45,9 @@ public class TransferServer {
                         pipeline.addLast("TransferConnectorHandler", TransferConfig.injector.getInstance(TransferConnectorHandler.class));
                     }
                 });
-        ChannelFuture future = bootstrap.bind(new InetSocketAddress(port)).addListener(f -> {
+        ChannelFuture future = bootstrap.bind(new InetSocketAddress(TransferConfig.port)).addListener(f -> {
             if (f.isSuccess()) {
-                logger.info("[transfer] start successful at port {}, waiting for connectors to connect...", port);
+                logger.info("[transfer] start successful at port {}, waiting for connectors to connect...", TransferConfig.port);
             } else {
                 throw new ImException("[transfer] start failed");
             }
