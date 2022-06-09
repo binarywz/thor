@@ -14,6 +14,8 @@
         <module>thor-transfer</module>
         <module>thor-status</module>
         <module>thor-connector</module>
+        <module>thor-client</module>
+        <module>thor-rest</module>
     </modules>
 
     <properties>
