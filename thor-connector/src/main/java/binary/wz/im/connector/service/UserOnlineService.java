@@ -2,16 +2,20 @@ package binary.wz.im.connector.service;
 
 import binary.wz.im.common.constant.MsgVersion;
 import binary.wz.im.common.proto.Internal;
+import binary.wz.im.connector.config.ConnectorConfig;
 import binary.wz.im.connector.context.ClientConn;
 import binary.wz.im.connector.context.ClientConnContext;
 import binary.wz.im.connector.context.ConnectorTransferContext;
 import binary.wz.im.session.util.IdWorker;
+import binary.wz.im.status.factory.UserStatusServiceFactory;
 import binary.wz.im.status.service.UserStatusService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Properties;
 
 /**
  * @author binarywz
@@ -23,17 +27,20 @@ public class UserOnlineService {
     private final static Logger logger = LoggerFactory.getLogger(UserOnlineService.class);
 
     private ClientConnContext connContext;
-    private ConnectorDeliverService deliverService;
     private UserStatusService statusService;
     private ConnectorTransferContext transferContext;
 
     @Inject
-    public UserOnlineService(ClientConnContext connContext, ConnectorDeliverService deliverService,
-                             UserStatusService statusService, ConnectorTransferContext transferContext) {
+    public UserOnlineService(ClientConnContext connContext, ConnectorTransferContext transferContext,
+                             UserStatusServiceFactory userStatusServiceFactory) {
         this.connContext = connContext;
-        this.deliverService = deliverService;
-        this.statusService = statusService;
         this.transferContext = transferContext;
+
+        Properties properties = new Properties();
+        properties.put("host", ConnectorConfig.redisHost);
+        properties.put("port", ConnectorConfig.redisPort);
+        properties.put("password", ConnectorConfig.redisPassword);
+        this.statusService = userStatusServiceFactory.createService(properties);
     }
 
     /**

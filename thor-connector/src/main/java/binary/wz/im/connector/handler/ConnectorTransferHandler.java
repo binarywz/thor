@@ -72,7 +72,7 @@ public class ConnectorTransferHandler extends SimpleChannelInboundHandler<Messag
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Message msg) throws Exception {
-        logger.debug("ConnectorTransferHandler#channelRead0 receive msg: {}", msg.toString());
+        logger.debug("ConnectorTransferHandler#channelRead0 receive msg:\r\n{}", msg.toString());
 
         MessageParser.validateFrom(msg, Internal.InternalMsg.Module.TRANSFER);
         MessageParser.validateDest(msg, Internal.InternalMsg.Module.CONNECTOR);

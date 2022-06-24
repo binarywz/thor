@@ -36,7 +36,7 @@ public class RelationHandler {
      * @return
      */
     public Mono<ServerResponse> getFriends(ServerRequest request) {
-        String userId = request.pathVariable("userId");
+        String userId = request.pathVariable("id");
 
         return Flux.fromIterable(relationService.getFriends(userId))
                 .collectList()

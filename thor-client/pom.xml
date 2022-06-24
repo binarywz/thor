@@ -16,4 +16,23 @@
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-assistedinject</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>binary.wz.im</groupId>
+            <artifactId>thor-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>binary.wz.im</groupId>
+            <artifactId>thor-session</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>

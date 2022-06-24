@@ -28,10 +28,12 @@ public class RcvAckWindow {
     private AtomicBoolean first;
     /**
      * 接收方在当前会话中收到的最后一条消息的ID，避免消息重复
+     * TODO 后续无需维护lastId，按收到的消息时间排序
      */
     private AtomicLong lastId;
     /**
      * 接收方消息暂存Map，处理乱序消息
+     * TODO 后续不处理乱序消息，仅收到消息后回复ACK
      */
     private ConcurrentHashMap<Long, RcvMessageProcessor> notContinuousMap;
 
@@ -44,7 +46,7 @@ public class RcvAckWindow {
 
     /**
      * 维护会话接收到的消息队列
-     *
+     * TODO mid修改为UUID
      * @param mid
      * @param from
      * @param dest

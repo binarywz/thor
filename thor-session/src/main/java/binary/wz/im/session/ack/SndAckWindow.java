@@ -59,10 +59,27 @@ public class SndAckWindow {
         windowMap.put(connectionId, this);
     }
 
+    /**
+     * 发送消息入队
+     * TODO mid使用UUID代替
+     * @param connectionId
+     * @param mid
+     * @param sndMessage
+     * @param sndFunction
+     * @return
+     */
     public static CompletableFuture<Internal.InternalMsg> offer(Serializable connectionId, Long mid, Message sndMessage, Consumer<Message> sndFunction) {
         return windowMap.get(connectionId).offer(mid, sndMessage, sndFunction);
     }
 
+    /**
+     * 发送消息入队
+     * TODO mid使用UUID代替
+     * @param mid
+     * @param sndMessage
+     * @param sndFunction
+     * @return
+     */
     public CompletableFuture<Internal.InternalMsg> offer(Long mid, Message sndMessage, Consumer<Message> sndFunction) {
         if (sndMsgProcessorMap.containsKey(mid)) {
             CompletableFuture<Internal.InternalMsg> future = new CompletableFuture<>();

@@ -15,13 +15,9 @@ import java.util.Properties;
 public class TransferConfig {
 
     public final static Injector injector;
-
     public final static Integer port;
-
     public final static String redisHost;
-
     public final static Integer redisPort;
-
     public final static String redisPassword;
 
     static {

@@ -57,11 +57,12 @@ public class ConnectorClientHandler extends SimpleChannelInboundHandler<Message>
         this.clientConnContext = clientConnContext;
         this.transferContext = transferContext;
         this.clientConnContext = new ClientConnContext();
+        this.clientMessageProcessor = new ClientMessageProcessor();
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Message msg) throws Exception {
-        logger.info("connector-{} receive msg: {}", transferContext.getConnectorId(), msg.toString());
+        logger.info("connector-{} receive msg:\r\n{}", transferContext.getConnectorId(), msg.toString());
         MessageParser.validateFrom(msg, Internal.InternalMsg.Module.CLIENT);
         MessageParser.validateDest(msg, Internal.InternalMsg.Module.CONNECTOR);
         /**
