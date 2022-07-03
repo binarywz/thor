@@ -2,7 +2,7 @@ package binary.wz.im.rest.service;
 
 import binary.wz.im.common.domain.po.OfflineMsg;
 import binary.wz.im.common.proto.Chat;
-import binary.wz.im.common.proto.State;
+import binary.wz.im.common.proto.Notify;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public interface OfflineMsgService extends IService<OfflineMsg> {
      * save offline state msg
      * @param msg
      */
-    void saveState(State.StateMsg msg);
+    void saveNotify(Notify.NotifyMsg msg);
 
     /**
      * get user's offline msg

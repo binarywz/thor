@@ -61,7 +61,7 @@ public class UserOnlineService {
          * TODO 客户端应直接拉取离线消息，拉取完再建立与Connector的连接，消息漫游
          */
         /**
-         * TODO 此处后续要考虑实现互踢功能
+         * TODO 此处后续要考虑实现同终端互踢
          */
         String oldConnectorId = statusService.online(userId, transferContext.getConnectorId());
         if (oldConnectorId != null) {
@@ -73,10 +73,8 @@ public class UserOnlineService {
 
     private void sendErrorToClient(String errMsg, ChannelHandlerContext ctx) {
         Internal.InternalMsg errAck = Internal.InternalMsg.newBuilder()
-                .setId(IdWorker.snowGenId())
+                .setId(IdWorker.UUID())
                 .setVersion(MsgVersion.V1.getVersion())
-                .setFrom(Internal.InternalMsg.Module.CONNECTOR)
-                .setDest(Internal.InternalMsg.Module.CLIENT)
                 .setCreateTime(System.currentTimeMillis())
                 .setMsgType(Internal.InternalMsg.MsgType.ERROR)
                 .setMsgBody(errMsg)
@@ -84,6 +82,10 @@ public class UserOnlineService {
         ctx.writeAndFlush(errMsg);
     }
 
+    /**
+     * 处理用户下线
+     * @param ctx
+     */
     public void userOffline(ChannelHandlerContext ctx) {
         ClientConn conn = connContext.getConn(ctx);
         if (conn == null) {

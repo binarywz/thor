@@ -1,9 +1,8 @@
 package binary.wz.im.transfer.handler;
 
-import binary.wz.im.common.parser.MessageParser;
 import binary.wz.im.common.proto.Chat;
 import binary.wz.im.common.proto.Internal;
-import binary.wz.im.common.proto.State;
+import binary.wz.im.common.proto.Notify;
 import binary.wz.im.session.processor.AbstractMessageProcessor;
 import binary.wz.im.session.processor.InternalMessageProcessor;
 import binary.wz.im.transfer.context.ConnectorConnContext;
@@ -38,10 +37,6 @@ public class TransferConnectorHandler extends SimpleChannelInboundHandler<Messag
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Message msg) throws Exception {
         logger.debug("TransferConnectorHandler#channelRead0 get msg: {}", msg.toString());
-
-        MessageParser.validateFrom(msg, Internal.InternalMsg.Module.CONNECTOR);
-        MessageParser.validateDest(msg, Internal.InternalMsg.Module.TRANSFER);
-
         messageProcessor.process(msg, ctx);
     }
 
@@ -57,7 +52,7 @@ public class TransferConnectorHandler extends SimpleChannelInboundHandler<Messag
             internalMessageProcessor.register(Internal.InternalMsg.MsgType.GREET, (m, ctx) -> transferService.doGreet(m, ctx));
 
             register(Chat.ChatMsg.class, (m, ctx) -> transferService.doChat(m)); // 转发CHAT消息
-            register(State.StateMsg.class, (m, ctx) -> transferService.doSendState(m)); // 转发STATE消息
+            register(Notify.NotifyMsg.class, (m, ctx) -> transferService.doNotify(m)); // 转发NOTIFY消息
             register(Internal.InternalMsg.class, internalMessageProcessor.generateFun()); // 处理INTERNAL.GREET消息
         }
     }

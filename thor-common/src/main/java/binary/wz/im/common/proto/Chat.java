@@ -37,27 +37,53 @@ public final class Chat {
 
     /**
      * <pre>
-     *消息id
+     *消息标识
      * </pre>
      *
-     * <code>required int64 id = 2;</code>
+     * <code>required string id = 2;</code>
      */
     boolean hasId();
     /**
      * <pre>
-     *消息id
+     *消息标识
      * </pre>
      *
-     * <code>required int64 id = 2;</code>
+     * <code>required string id = 2;</code>
      */
-    long getId();
+    java.lang.String getId();
+    /**
+     * <pre>
+     *消息标识
+     * </pre>
+     *
+     * <code>required string id = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getIdBytes();
+
+    /**
+     * <pre>
+     *消息序号
+     * </pre>
+     *
+     * <code>optional int64 seq = 3;</code>
+     */
+    boolean hasSeq();
+    /**
+     * <pre>
+     *消息序号
+     * </pre>
+     *
+     * <code>optional int64 seq = 3;</code>
+     */
+    long getSeq();
 
     /**
      * <pre>
      *接收者类型。
      * </pre>
      *
-     * <code>required .binary.wz.im.common.proto.ChatMsg.DestType destType = 3;</code>
+     * <code>required .binary.wz.im.common.proto.ChatMsg.DestType destType = 4;</code>
      */
     boolean hasDestType();
     /**
@@ -65,7 +91,7 @@ public final class Chat {
      *接收者类型。
      * </pre>
      *
-     * <code>required .binary.wz.im.common.proto.ChatMsg.DestType destType = 3;</code>
+     * <code>required .binary.wz.im.common.proto.ChatMsg.DestType destType = 4;</code>
      */
     binary.wz.im.common.proto.Chat.ChatMsg.DestType getDestType();
 
@@ -74,7 +100,7 @@ public final class Chat {
      *发送者userId
      * </pre>
      *
-     * <code>required string fromId = 4;</code>
+     * <code>required string fromId = 5;</code>
      */
     boolean hasFromId();
     /**
@@ -82,7 +108,7 @@ public final class Chat {
      *发送者userId
      * </pre>
      *
-     * <code>required string fromId = 4;</code>
+     * <code>required string fromId = 5;</code>
      */
     java.lang.String getFromId();
     /**
@@ -90,7 +116,7 @@ public final class Chat {
      *发送者userId
      * </pre>
      *
-     * <code>required string fromId = 4;</code>
+     * <code>required string fromId = 5;</code>
      */
     com.google.protobuf.ByteString
         getFromIdBytes();
@@ -100,7 +126,7 @@ public final class Chat {
      *接收者userId
      * </pre>
      *
-     * <code>required string destId = 5;</code>
+     * <code>required string destId = 6;</code>
      */
     boolean hasDestId();
     /**
@@ -108,7 +134,7 @@ public final class Chat {
      *接收者userId
      * </pre>
      *
-     * <code>required string destId = 5;</code>
+     * <code>required string destId = 6;</code>
      */
     java.lang.String getDestId();
     /**
@@ -116,7 +142,7 @@ public final class Chat {
      *接收者userId
      * </pre>
      *
-     * <code>required string destId = 5;</code>
+     * <code>required string destId = 6;</code>
      */
     com.google.protobuf.ByteString
         getDestIdBytes();
@@ -126,7 +152,7 @@ public final class Chat {
      *发送时间
      * </pre>
      *
-     * <code>required int64 createTime = 6;</code>
+     * <code>required int64 createTime = 7;</code>
      */
     boolean hasCreateTime();
     /**
@@ -134,7 +160,7 @@ public final class Chat {
      *发送时间
      * </pre>
      *
-     * <code>required int64 createTime = 6;</code>
+     * <code>required int64 createTime = 7;</code>
      */
     long getCreateTime();
 
@@ -143,7 +169,7 @@ public final class Chat {
      *消息类型
      * </pre>
      *
-     * <code>required .binary.wz.im.common.proto.ChatMsg.MsgType msgType = 7;</code>
+     * <code>required .binary.wz.im.common.proto.ChatMsg.MsgType msgType = 8;</code>
      */
     boolean hasMsgType();
     /**
@@ -151,24 +177,24 @@ public final class Chat {
      *消息类型
      * </pre>
      *
-     * <code>required .binary.wz.im.common.proto.ChatMsg.MsgType msgType = 7;</code>
+     * <code>required .binary.wz.im.common.proto.ChatMsg.MsgType msgType = 8;</code>
      */
     binary.wz.im.common.proto.Chat.ChatMsg.MsgType getMsgType();
 
     /**
      * <pre>
-     *消息体，json，格式由消息类型决定
+     *消息体
      * </pre>
      *
-     * <code>required bytes msgBody = 8;</code>
+     * <code>required bytes msgBody = 9;</code>
      */
     boolean hasMsgBody();
     /**
      * <pre>
-     *消息体，json，格式由消息类型决定
+     *消息体
      * </pre>
      *
-     * <code>required bytes msgBody = 8;</code>
+     * <code>required bytes msgBody = 9;</code>
      */
     com.google.protobuf.ByteString getMsgBody();
 
@@ -199,6 +225,7 @@ public final class Chat {
       super(builder);
     }
     private ChatMsg() {
+      id_ = "";
       destType_ = 0;
       fromId_ = "";
       destId_ = "";
@@ -236,60 +263,66 @@ public final class Chat {
               version_ = input.readInt32();
               break;
             }
-            case 16: {
+            case 18: {
+              com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000002;
-              id_ = input.readInt64();
+              id_ = bs;
               break;
             }
             case 24: {
+              bitField0_ |= 0x00000004;
+              seq_ = input.readInt64();
+              break;
+            }
+            case 32: {
               int rawValue = input.readEnum();
                 @SuppressWarnings("deprecation")
               binary.wz.im.common.proto.Chat.ChatMsg.DestType value = binary.wz.im.common.proto.Chat.ChatMsg.DestType.valueOf(rawValue);
               if (value == null) {
-                unknownFields.mergeVarintField(3, rawValue);
+                unknownFields.mergeVarintField(4, rawValue);
               } else {
-                bitField0_ |= 0x00000004;
+                bitField0_ |= 0x00000008;
                 destType_ = rawValue;
               }
-              break;
-            }
-            case 34: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000008;
-              fromId_ = bs;
               break;
             }
             case 42: {
               com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000010;
+              fromId_ = bs;
+              break;
+            }
+            case 50: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000020;
               destId_ = bs;
               break;
             }
-            case 48: {
-              bitField0_ |= 0x00000020;
+            case 56: {
+              bitField0_ |= 0x00000040;
               createTime_ = input.readInt64();
               break;
             }
-            case 56: {
+            case 64: {
               int rawValue = input.readEnum();
                 @SuppressWarnings("deprecation")
               binary.wz.im.common.proto.Chat.ChatMsg.MsgType value = binary.wz.im.common.proto.Chat.ChatMsg.MsgType.valueOf(rawValue);
               if (value == null) {
-                unknownFields.mergeVarintField(7, rawValue);
+                unknownFields.mergeVarintField(8, rawValue);
               } else {
-                bitField0_ |= 0x00000040;
+                bitField0_ |= 0x00000080;
                 msgType_ = rawValue;
               }
               break;
             }
-            case 66: {
-              bitField0_ |= 0x00000080;
+            case 74: {
+              bitField0_ |= 0x00000100;
               msgBody_ = input.readBytes();
               break;
             }
             case 258: {
               com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000100;
+              bitField0_ |= 0x00000200;
               addition_ = bs;
               break;
             }
@@ -530,46 +563,100 @@ public final class Chat {
     }
 
     public static final int ID_FIELD_NUMBER = 2;
-    private long id_;
+    private volatile java.lang.Object id_;
     /**
      * <pre>
-     *消息id
+     *消息标识
      * </pre>
      *
-     * <code>required int64 id = 2;</code>
+     * <code>required string id = 2;</code>
      */
     public boolean hasId() {
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
      * <pre>
-     *消息id
+     *消息标识
      * </pre>
      *
-     * <code>required int64 id = 2;</code>
+     * <code>required string id = 2;</code>
      */
-    public long getId() {
-      return id_;
+    public java.lang.String getId() {
+      java.lang.Object ref = id_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          id_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     *消息标识
+     * </pre>
+     *
+     * <code>required string id = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getIdBytes() {
+      java.lang.Object ref = id_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        id_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
-    public static final int DESTTYPE_FIELD_NUMBER = 3;
+    public static final int SEQ_FIELD_NUMBER = 3;
+    private long seq_;
+    /**
+     * <pre>
+     *消息序号
+     * </pre>
+     *
+     * <code>optional int64 seq = 3;</code>
+     */
+    public boolean hasSeq() {
+      return ((bitField0_ & 0x00000004) != 0);
+    }
+    /**
+     * <pre>
+     *消息序号
+     * </pre>
+     *
+     * <code>optional int64 seq = 3;</code>
+     */
+    public long getSeq() {
+      return seq_;
+    }
+
+    public static final int DESTTYPE_FIELD_NUMBER = 4;
     private int destType_;
     /**
      * <pre>
      *接收者类型。
      * </pre>
      *
-     * <code>required .binary.wz.im.common.proto.ChatMsg.DestType destType = 3;</code>
+     * <code>required .binary.wz.im.common.proto.ChatMsg.DestType destType = 4;</code>
      */
     public boolean hasDestType() {
-      return ((bitField0_ & 0x00000004) != 0);
+      return ((bitField0_ & 0x00000008) != 0);
     }
     /**
      * <pre>
      *接收者类型。
      * </pre>
      *
-     * <code>required .binary.wz.im.common.proto.ChatMsg.DestType destType = 3;</code>
+     * <code>required .binary.wz.im.common.proto.ChatMsg.DestType destType = 4;</code>
      */
     public binary.wz.im.common.proto.Chat.ChatMsg.DestType getDestType() {
       @SuppressWarnings("deprecation")
@@ -577,24 +664,24 @@ public final class Chat {
       return result == null ? binary.wz.im.common.proto.Chat.ChatMsg.DestType.SINGLE : result;
     }
 
-    public static final int FROMID_FIELD_NUMBER = 4;
+    public static final int FROMID_FIELD_NUMBER = 5;
     private volatile java.lang.Object fromId_;
     /**
      * <pre>
      *发送者userId
      * </pre>
      *
-     * <code>required string fromId = 4;</code>
+     * <code>required string fromId = 5;</code>
      */
     public boolean hasFromId() {
-      return ((bitField0_ & 0x00000008) != 0);
+      return ((bitField0_ & 0x00000010) != 0);
     }
     /**
      * <pre>
      *发送者userId
      * </pre>
      *
-     * <code>required string fromId = 4;</code>
+     * <code>required string fromId = 5;</code>
      */
     public java.lang.String getFromId() {
       java.lang.Object ref = fromId_;
@@ -615,7 +702,7 @@ public final class Chat {
      *发送者userId
      * </pre>
      *
-     * <code>required string fromId = 4;</code>
+     * <code>required string fromId = 5;</code>
      */
     public com.google.protobuf.ByteString
         getFromIdBytes() {
@@ -631,24 +718,24 @@ public final class Chat {
       }
     }
 
-    public static final int DESTID_FIELD_NUMBER = 5;
+    public static final int DESTID_FIELD_NUMBER = 6;
     private volatile java.lang.Object destId_;
     /**
      * <pre>
      *接收者userId
      * </pre>
      *
-     * <code>required string destId = 5;</code>
+     * <code>required string destId = 6;</code>
      */
     public boolean hasDestId() {
-      return ((bitField0_ & 0x00000010) != 0);
+      return ((bitField0_ & 0x00000020) != 0);
     }
     /**
      * <pre>
      *接收者userId
      * </pre>
      *
-     * <code>required string destId = 5;</code>
+     * <code>required string destId = 6;</code>
      */
     public java.lang.String getDestId() {
       java.lang.Object ref = destId_;
@@ -669,7 +756,7 @@ public final class Chat {
      *接收者userId
      * </pre>
      *
-     * <code>required string destId = 5;</code>
+     * <code>required string destId = 6;</code>
      */
     public com.google.protobuf.ByteString
         getDestIdBytes() {
@@ -685,47 +772,47 @@ public final class Chat {
       }
     }
 
-    public static final int CREATETIME_FIELD_NUMBER = 6;
+    public static final int CREATETIME_FIELD_NUMBER = 7;
     private long createTime_;
     /**
      * <pre>
      *发送时间
      * </pre>
      *
-     * <code>required int64 createTime = 6;</code>
+     * <code>required int64 createTime = 7;</code>
      */
     public boolean hasCreateTime() {
-      return ((bitField0_ & 0x00000020) != 0);
+      return ((bitField0_ & 0x00000040) != 0);
     }
     /**
      * <pre>
      *发送时间
      * </pre>
      *
-     * <code>required int64 createTime = 6;</code>
+     * <code>required int64 createTime = 7;</code>
      */
     public long getCreateTime() {
       return createTime_;
     }
 
-    public static final int MSGTYPE_FIELD_NUMBER = 7;
+    public static final int MSGTYPE_FIELD_NUMBER = 8;
     private int msgType_;
     /**
      * <pre>
      *消息类型
      * </pre>
      *
-     * <code>required .binary.wz.im.common.proto.ChatMsg.MsgType msgType = 7;</code>
+     * <code>required .binary.wz.im.common.proto.ChatMsg.MsgType msgType = 8;</code>
      */
     public boolean hasMsgType() {
-      return ((bitField0_ & 0x00000040) != 0);
+      return ((bitField0_ & 0x00000080) != 0);
     }
     /**
      * <pre>
      *消息类型
      * </pre>
      *
-     * <code>required .binary.wz.im.common.proto.ChatMsg.MsgType msgType = 7;</code>
+     * <code>required .binary.wz.im.common.proto.ChatMsg.MsgType msgType = 8;</code>
      */
     public binary.wz.im.common.proto.Chat.ChatMsg.MsgType getMsgType() {
       @SuppressWarnings("deprecation")
@@ -733,24 +820,24 @@ public final class Chat {
       return result == null ? binary.wz.im.common.proto.Chat.ChatMsg.MsgType.TEXT : result;
     }
 
-    public static final int MSGBODY_FIELD_NUMBER = 8;
+    public static final int MSGBODY_FIELD_NUMBER = 9;
     private com.google.protobuf.ByteString msgBody_;
     /**
      * <pre>
-     *消息体，json，格式由消息类型决定
+     *消息体
      * </pre>
      *
-     * <code>required bytes msgBody = 8;</code>
+     * <code>required bytes msgBody = 9;</code>
      */
     public boolean hasMsgBody() {
-      return ((bitField0_ & 0x00000080) != 0);
+      return ((bitField0_ & 0x00000100) != 0);
     }
     /**
      * <pre>
-     *消息体，json，格式由消息类型决定
+     *消息体
      * </pre>
      *
-     * <code>required bytes msgBody = 8;</code>
+     * <code>required bytes msgBody = 9;</code>
      */
     public com.google.protobuf.ByteString getMsgBody() {
       return msgBody_;
@@ -762,7 +849,7 @@ public final class Chat {
      * <code>optional string addition = 32;</code>
      */
     public boolean hasAddition() {
-      return ((bitField0_ & 0x00000100) != 0);
+      return ((bitField0_ & 0x00000200) != 0);
     }
     /**
      * <code>optional string addition = 32;</code>
@@ -848,27 +935,30 @@ public final class Chat {
         output.writeInt32(1, version_);
       }
       if (((bitField0_ & 0x00000002) != 0)) {
-        output.writeInt64(2, id_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, id_);
       }
       if (((bitField0_ & 0x00000004) != 0)) {
-        output.writeEnum(3, destType_);
+        output.writeInt64(3, seq_);
       }
       if (((bitField0_ & 0x00000008) != 0)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, fromId_);
+        output.writeEnum(4, destType_);
       }
       if (((bitField0_ & 0x00000010) != 0)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, destId_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, fromId_);
       }
       if (((bitField0_ & 0x00000020) != 0)) {
-        output.writeInt64(6, createTime_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, destId_);
       }
       if (((bitField0_ & 0x00000040) != 0)) {
-        output.writeEnum(7, msgType_);
+        output.writeInt64(7, createTime_);
       }
       if (((bitField0_ & 0x00000080) != 0)) {
-        output.writeBytes(8, msgBody_);
+        output.writeEnum(8, msgType_);
       }
       if (((bitField0_ & 0x00000100) != 0)) {
+        output.writeBytes(9, msgBody_);
+      }
+      if (((bitField0_ & 0x00000200) != 0)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 32, addition_);
       }
       unknownFields.writeTo(output);
@@ -885,32 +975,35 @@ public final class Chat {
           .computeInt32Size(1, version_);
       }
       if (((bitField0_ & 0x00000002) != 0)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(2, id_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, id_);
       }
       if (((bitField0_ & 0x00000004) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(3, destType_);
+          .computeInt64Size(3, seq_);
       }
       if (((bitField0_ & 0x00000008) != 0)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, fromId_);
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(4, destType_);
       }
       if (((bitField0_ & 0x00000010) != 0)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, destId_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, fromId_);
       }
       if (((bitField0_ & 0x00000020) != 0)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(6, createTime_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, destId_);
       }
       if (((bitField0_ & 0x00000040) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(7, msgType_);
+          .computeInt64Size(7, createTime_);
       }
       if (((bitField0_ & 0x00000080) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(8, msgBody_);
+          .computeEnumSize(8, msgType_);
       }
       if (((bitField0_ & 0x00000100) != 0)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(9, msgBody_);
+      }
+      if (((bitField0_ & 0x00000200) != 0)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(32, addition_);
       }
       size += unknownFields.getSerializedSize();
@@ -935,8 +1028,13 @@ public final class Chat {
       }
       if (hasId() != other.hasId()) return false;
       if (hasId()) {
-        if (getId()
-            != other.getId()) return false;
+        if (!getId()
+            .equals(other.getId())) return false;
+      }
+      if (hasSeq() != other.hasSeq()) return false;
+      if (hasSeq()) {
+        if (getSeq()
+            != other.getSeq()) return false;
       }
       if (hasDestType() != other.hasDestType()) return false;
       if (hasDestType()) {
@@ -988,8 +1086,12 @@ public final class Chat {
       }
       if (hasId()) {
         hash = (37 * hash) + ID_FIELD_NUMBER;
+        hash = (53 * hash) + getId().hashCode();
+      }
+      if (hasSeq()) {
+        hash = (37 * hash) + SEQ_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-            getId());
+            getSeq());
       }
       if (hasDestType()) {
         hash = (37 * hash) + DESTTYPE_FIELD_NUMBER;
@@ -1155,22 +1257,24 @@ public final class Chat {
         super.clear();
         version_ = 0;
         bitField0_ = (bitField0_ & ~0x00000001);
-        id_ = 0L;
+        id_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
-        destType_ = 0;
+        seq_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000004);
-        fromId_ = "";
+        destType_ = 0;
         bitField0_ = (bitField0_ & ~0x00000008);
-        destId_ = "";
+        fromId_ = "";
         bitField0_ = (bitField0_ & ~0x00000010);
-        createTime_ = 0L;
+        destId_ = "";
         bitField0_ = (bitField0_ & ~0x00000020);
-        msgType_ = 0;
+        createTime_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000040);
-        msgBody_ = com.google.protobuf.ByteString.EMPTY;
+        msgType_ = 0;
         bitField0_ = (bitField0_ & ~0x00000080);
-        addition_ = "";
+        msgBody_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000100);
+        addition_ = "";
+        bitField0_ = (bitField0_ & ~0x00000200);
         return this;
       }
 
@@ -1204,35 +1308,39 @@ public final class Chat {
           to_bitField0_ |= 0x00000001;
         }
         if (((from_bitField0_ & 0x00000002) != 0)) {
-          result.id_ = id_;
           to_bitField0_ |= 0x00000002;
         }
+        result.id_ = id_;
         if (((from_bitField0_ & 0x00000004) != 0)) {
+          result.seq_ = seq_;
           to_bitField0_ |= 0x00000004;
         }
-        result.destType_ = destType_;
         if (((from_bitField0_ & 0x00000008) != 0)) {
           to_bitField0_ |= 0x00000008;
         }
-        result.fromId_ = fromId_;
+        result.destType_ = destType_;
         if (((from_bitField0_ & 0x00000010) != 0)) {
           to_bitField0_ |= 0x00000010;
         }
-        result.destId_ = destId_;
+        result.fromId_ = fromId_;
         if (((from_bitField0_ & 0x00000020) != 0)) {
-          result.createTime_ = createTime_;
           to_bitField0_ |= 0x00000020;
         }
+        result.destId_ = destId_;
         if (((from_bitField0_ & 0x00000040) != 0)) {
+          result.createTime_ = createTime_;
           to_bitField0_ |= 0x00000040;
         }
-        result.msgType_ = msgType_;
         if (((from_bitField0_ & 0x00000080) != 0)) {
           to_bitField0_ |= 0x00000080;
         }
-        result.msgBody_ = msgBody_;
+        result.msgType_ = msgType_;
         if (((from_bitField0_ & 0x00000100) != 0)) {
           to_bitField0_ |= 0x00000100;
+        }
+        result.msgBody_ = msgBody_;
+        if (((from_bitField0_ & 0x00000200) != 0)) {
+          to_bitField0_ |= 0x00000200;
         }
         result.addition_ = addition_;
         result.bitField0_ = to_bitField0_;
@@ -1288,18 +1396,23 @@ public final class Chat {
           setVersion(other.getVersion());
         }
         if (other.hasId()) {
-          setId(other.getId());
+          bitField0_ |= 0x00000002;
+          id_ = other.id_;
+          onChanged();
+        }
+        if (other.hasSeq()) {
+          setSeq(other.getSeq());
         }
         if (other.hasDestType()) {
           setDestType(other.getDestType());
         }
         if (other.hasFromId()) {
-          bitField0_ |= 0x00000008;
+          bitField0_ |= 0x00000010;
           fromId_ = other.fromId_;
           onChanged();
         }
         if (other.hasDestId()) {
-          bitField0_ |= 0x00000010;
+          bitField0_ |= 0x00000020;
           destId_ = other.destId_;
           onChanged();
         }
@@ -1313,7 +1426,7 @@ public final class Chat {
           setMsgBody(other.getMsgBody());
         }
         if (other.hasAddition()) {
-          bitField0_ |= 0x00000100;
+          bitField0_ |= 0x00000200;
           addition_ = other.addition_;
           onChanged();
         }
@@ -1419,50 +1532,150 @@ public final class Chat {
         return this;
       }
 
-      private long id_ ;
+      private java.lang.Object id_ = "";
       /**
        * <pre>
-       *消息id
+       *消息标识
        * </pre>
        *
-       * <code>required int64 id = 2;</code>
+       * <code>required string id = 2;</code>
        */
       public boolean hasId() {
         return ((bitField0_ & 0x00000002) != 0);
       }
       /**
        * <pre>
-       *消息id
+       *消息标识
        * </pre>
        *
-       * <code>required int64 id = 2;</code>
+       * <code>required string id = 2;</code>
        */
-      public long getId() {
-        return id_;
+      public java.lang.String getId() {
+        java.lang.Object ref = id_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            id_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
        * <pre>
-       *消息id
+       *消息标识
        * </pre>
        *
-       * <code>required int64 id = 2;</code>
+       * <code>required string id = 2;</code>
        */
-      public Builder setId(long value) {
-        bitField0_ |= 0x00000002;
+      public com.google.protobuf.ByteString
+          getIdBytes() {
+        java.lang.Object ref = id_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          id_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       *消息标识
+       * </pre>
+       *
+       * <code>required string id = 2;</code>
+       */
+      public Builder setId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
         id_ = value;
         onChanged();
         return this;
       }
       /**
        * <pre>
-       *消息id
+       *消息标识
        * </pre>
        *
-       * <code>required int64 id = 2;</code>
+       * <code>required string id = 2;</code>
        */
       public Builder clearId() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        id_ = 0L;
+        id_ = getDefaultInstance().getId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *消息标识
+       * </pre>
+       *
+       * <code>required string id = 2;</code>
+       */
+      public Builder setIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        id_ = value;
+        onChanged();
+        return this;
+      }
+
+      private long seq_ ;
+      /**
+       * <pre>
+       *消息序号
+       * </pre>
+       *
+       * <code>optional int64 seq = 3;</code>
+       */
+      public boolean hasSeq() {
+        return ((bitField0_ & 0x00000004) != 0);
+      }
+      /**
+       * <pre>
+       *消息序号
+       * </pre>
+       *
+       * <code>optional int64 seq = 3;</code>
+       */
+      public long getSeq() {
+        return seq_;
+      }
+      /**
+       * <pre>
+       *消息序号
+       * </pre>
+       *
+       * <code>optional int64 seq = 3;</code>
+       */
+      public Builder setSeq(long value) {
+        bitField0_ |= 0x00000004;
+        seq_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *消息序号
+       * </pre>
+       *
+       * <code>optional int64 seq = 3;</code>
+       */
+      public Builder clearSeq() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        seq_ = 0L;
         onChanged();
         return this;
       }
@@ -1473,17 +1686,17 @@ public final class Chat {
        *接收者类型。
        * </pre>
        *
-       * <code>required .binary.wz.im.common.proto.ChatMsg.DestType destType = 3;</code>
+       * <code>required .binary.wz.im.common.proto.ChatMsg.DestType destType = 4;</code>
        */
       public boolean hasDestType() {
-        return ((bitField0_ & 0x00000004) != 0);
+        return ((bitField0_ & 0x00000008) != 0);
       }
       /**
        * <pre>
        *接收者类型。
        * </pre>
        *
-       * <code>required .binary.wz.im.common.proto.ChatMsg.DestType destType = 3;</code>
+       * <code>required .binary.wz.im.common.proto.ChatMsg.DestType destType = 4;</code>
        */
       public binary.wz.im.common.proto.Chat.ChatMsg.DestType getDestType() {
         @SuppressWarnings("deprecation")
@@ -1495,13 +1708,13 @@ public final class Chat {
        *接收者类型。
        * </pre>
        *
-       * <code>required .binary.wz.im.common.proto.ChatMsg.DestType destType = 3;</code>
+       * <code>required .binary.wz.im.common.proto.ChatMsg.DestType destType = 4;</code>
        */
       public Builder setDestType(binary.wz.im.common.proto.Chat.ChatMsg.DestType value) {
         if (value == null) {
           throw new NullPointerException();
         }
-        bitField0_ |= 0x00000004;
+        bitField0_ |= 0x00000008;
         destType_ = value.getNumber();
         onChanged();
         return this;
@@ -1511,10 +1724,10 @@ public final class Chat {
        *接收者类型。
        * </pre>
        *
-       * <code>required .binary.wz.im.common.proto.ChatMsg.DestType destType = 3;</code>
+       * <code>required .binary.wz.im.common.proto.ChatMsg.DestType destType = 4;</code>
        */
       public Builder clearDestType() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000008);
         destType_ = 0;
         onChanged();
         return this;
@@ -1526,17 +1739,17 @@ public final class Chat {
        *发送者userId
        * </pre>
        *
-       * <code>required string fromId = 4;</code>
+       * <code>required string fromId = 5;</code>
        */
       public boolean hasFromId() {
-        return ((bitField0_ & 0x00000008) != 0);
+        return ((bitField0_ & 0x00000010) != 0);
       }
       /**
        * <pre>
        *发送者userId
        * </pre>
        *
-       * <code>required string fromId = 4;</code>
+       * <code>required string fromId = 5;</code>
        */
       public java.lang.String getFromId() {
         java.lang.Object ref = fromId_;
@@ -1557,7 +1770,7 @@ public final class Chat {
        *发送者userId
        * </pre>
        *
-       * <code>required string fromId = 4;</code>
+       * <code>required string fromId = 5;</code>
        */
       public com.google.protobuf.ByteString
           getFromIdBytes() {
@@ -1577,14 +1790,14 @@ public final class Chat {
        *发送者userId
        * </pre>
        *
-       * <code>required string fromId = 4;</code>
+       * <code>required string fromId = 5;</code>
        */
       public Builder setFromId(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000008;
+  bitField0_ |= 0x00000010;
         fromId_ = value;
         onChanged();
         return this;
@@ -1594,10 +1807,10 @@ public final class Chat {
        *发送者userId
        * </pre>
        *
-       * <code>required string fromId = 4;</code>
+       * <code>required string fromId = 5;</code>
        */
       public Builder clearFromId() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000010);
         fromId_ = getDefaultInstance().getFromId();
         onChanged();
         return this;
@@ -1607,14 +1820,14 @@ public final class Chat {
        *发送者userId
        * </pre>
        *
-       * <code>required string fromId = 4;</code>
+       * <code>required string fromId = 5;</code>
        */
       public Builder setFromIdBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000008;
+  bitField0_ |= 0x00000010;
         fromId_ = value;
         onChanged();
         return this;
@@ -1626,17 +1839,17 @@ public final class Chat {
        *接收者userId
        * </pre>
        *
-       * <code>required string destId = 5;</code>
+       * <code>required string destId = 6;</code>
        */
       public boolean hasDestId() {
-        return ((bitField0_ & 0x00000010) != 0);
+        return ((bitField0_ & 0x00000020) != 0);
       }
       /**
        * <pre>
        *接收者userId
        * </pre>
        *
-       * <code>required string destId = 5;</code>
+       * <code>required string destId = 6;</code>
        */
       public java.lang.String getDestId() {
         java.lang.Object ref = destId_;
@@ -1657,7 +1870,7 @@ public final class Chat {
        *接收者userId
        * </pre>
        *
-       * <code>required string destId = 5;</code>
+       * <code>required string destId = 6;</code>
        */
       public com.google.protobuf.ByteString
           getDestIdBytes() {
@@ -1677,14 +1890,14 @@ public final class Chat {
        *接收者userId
        * </pre>
        *
-       * <code>required string destId = 5;</code>
+       * <code>required string destId = 6;</code>
        */
       public Builder setDestId(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000010;
+  bitField0_ |= 0x00000020;
         destId_ = value;
         onChanged();
         return this;
@@ -1694,10 +1907,10 @@ public final class Chat {
        *接收者userId
        * </pre>
        *
-       * <code>required string destId = 5;</code>
+       * <code>required string destId = 6;</code>
        */
       public Builder clearDestId() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ = (bitField0_ & ~0x00000020);
         destId_ = getDefaultInstance().getDestId();
         onChanged();
         return this;
@@ -1707,14 +1920,14 @@ public final class Chat {
        *接收者userId
        * </pre>
        *
-       * <code>required string destId = 5;</code>
+       * <code>required string destId = 6;</code>
        */
       public Builder setDestIdBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000010;
+  bitField0_ |= 0x00000020;
         destId_ = value;
         onChanged();
         return this;
@@ -1726,17 +1939,17 @@ public final class Chat {
        *发送时间
        * </pre>
        *
-       * <code>required int64 createTime = 6;</code>
+       * <code>required int64 createTime = 7;</code>
        */
       public boolean hasCreateTime() {
-        return ((bitField0_ & 0x00000020) != 0);
+        return ((bitField0_ & 0x00000040) != 0);
       }
       /**
        * <pre>
        *发送时间
        * </pre>
        *
-       * <code>required int64 createTime = 6;</code>
+       * <code>required int64 createTime = 7;</code>
        */
       public long getCreateTime() {
         return createTime_;
@@ -1746,10 +1959,10 @@ public final class Chat {
        *发送时间
        * </pre>
        *
-       * <code>required int64 createTime = 6;</code>
+       * <code>required int64 createTime = 7;</code>
        */
       public Builder setCreateTime(long value) {
-        bitField0_ |= 0x00000020;
+        bitField0_ |= 0x00000040;
         createTime_ = value;
         onChanged();
         return this;
@@ -1759,10 +1972,10 @@ public final class Chat {
        *发送时间
        * </pre>
        *
-       * <code>required int64 createTime = 6;</code>
+       * <code>required int64 createTime = 7;</code>
        */
       public Builder clearCreateTime() {
-        bitField0_ = (bitField0_ & ~0x00000020);
+        bitField0_ = (bitField0_ & ~0x00000040);
         createTime_ = 0L;
         onChanged();
         return this;
@@ -1774,17 +1987,17 @@ public final class Chat {
        *消息类型
        * </pre>
        *
-       * <code>required .binary.wz.im.common.proto.ChatMsg.MsgType msgType = 7;</code>
+       * <code>required .binary.wz.im.common.proto.ChatMsg.MsgType msgType = 8;</code>
        */
       public boolean hasMsgType() {
-        return ((bitField0_ & 0x00000040) != 0);
+        return ((bitField0_ & 0x00000080) != 0);
       }
       /**
        * <pre>
        *消息类型
        * </pre>
        *
-       * <code>required .binary.wz.im.common.proto.ChatMsg.MsgType msgType = 7;</code>
+       * <code>required .binary.wz.im.common.proto.ChatMsg.MsgType msgType = 8;</code>
        */
       public binary.wz.im.common.proto.Chat.ChatMsg.MsgType getMsgType() {
         @SuppressWarnings("deprecation")
@@ -1796,13 +2009,13 @@ public final class Chat {
        *消息类型
        * </pre>
        *
-       * <code>required .binary.wz.im.common.proto.ChatMsg.MsgType msgType = 7;</code>
+       * <code>required .binary.wz.im.common.proto.ChatMsg.MsgType msgType = 8;</code>
        */
       public Builder setMsgType(binary.wz.im.common.proto.Chat.ChatMsg.MsgType value) {
         if (value == null) {
           throw new NullPointerException();
         }
-        bitField0_ |= 0x00000040;
+        bitField0_ |= 0x00000080;
         msgType_ = value.getNumber();
         onChanged();
         return this;
@@ -1812,10 +2025,10 @@ public final class Chat {
        *消息类型
        * </pre>
        *
-       * <code>required .binary.wz.im.common.proto.ChatMsg.MsgType msgType = 7;</code>
+       * <code>required .binary.wz.im.common.proto.ChatMsg.MsgType msgType = 8;</code>
        */
       public Builder clearMsgType() {
-        bitField0_ = (bitField0_ & ~0x00000040);
+        bitField0_ = (bitField0_ & ~0x00000080);
         msgType_ = 0;
         onChanged();
         return this;
@@ -1824,49 +2037,49 @@ public final class Chat {
       private com.google.protobuf.ByteString msgBody_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <pre>
-       *消息体，json，格式由消息类型决定
+       *消息体
        * </pre>
        *
-       * <code>required bytes msgBody = 8;</code>
+       * <code>required bytes msgBody = 9;</code>
        */
       public boolean hasMsgBody() {
-        return ((bitField0_ & 0x00000080) != 0);
+        return ((bitField0_ & 0x00000100) != 0);
       }
       /**
        * <pre>
-       *消息体，json，格式由消息类型决定
+       *消息体
        * </pre>
        *
-       * <code>required bytes msgBody = 8;</code>
+       * <code>required bytes msgBody = 9;</code>
        */
       public com.google.protobuf.ByteString getMsgBody() {
         return msgBody_;
       }
       /**
        * <pre>
-       *消息体，json，格式由消息类型决定
+       *消息体
        * </pre>
        *
-       * <code>required bytes msgBody = 8;</code>
+       * <code>required bytes msgBody = 9;</code>
        */
       public Builder setMsgBody(com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000080;
+  bitField0_ |= 0x00000100;
         msgBody_ = value;
         onChanged();
         return this;
       }
       /**
        * <pre>
-       *消息体，json，格式由消息类型决定
+       *消息体
        * </pre>
        *
-       * <code>required bytes msgBody = 8;</code>
+       * <code>required bytes msgBody = 9;</code>
        */
       public Builder clearMsgBody() {
-        bitField0_ = (bitField0_ & ~0x00000080);
+        bitField0_ = (bitField0_ & ~0x00000100);
         msgBody_ = getDefaultInstance().getMsgBody();
         onChanged();
         return this;
@@ -1877,7 +2090,7 @@ public final class Chat {
        * <code>optional string addition = 32;</code>
        */
       public boolean hasAddition() {
-        return ((bitField0_ & 0x00000100) != 0);
+        return ((bitField0_ & 0x00000200) != 0);
       }
       /**
        * <code>optional string addition = 32;</code>
@@ -1920,7 +2133,7 @@ public final class Chat {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000100;
+  bitField0_ |= 0x00000200;
         addition_ = value;
         onChanged();
         return this;
@@ -1929,7 +2142,7 @@ public final class Chat {
        * <code>optional string addition = 32;</code>
        */
       public Builder clearAddition() {
-        bitField0_ = (bitField0_ & ~0x00000100);
+        bitField0_ = (bitField0_ & ~0x00000200);
         addition_ = getDefaultInstance().getAddition();
         onChanged();
         return this;
@@ -1942,7 +2155,7 @@ public final class Chat {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000100;
+  bitField0_ |= 0x00000200;
         addition_ = value;
         onChanged();
         return this;
@@ -2643,7 +2856,7 @@ public final class Chat {
 
     /**
      * <pre>
-     *媒体文件上传到得到的KEY，用于生成下载URL。
+     *媒体文件上传到得到的KEY，用于生成下载URL
      * </pre>
      *
      * <code>required string fileId = 1;</code>
@@ -2651,7 +2864,7 @@ public final class Chat {
     boolean hasFileId();
     /**
      * <pre>
-     *媒体文件上传到得到的KEY，用于生成下载URL。
+     *媒体文件上传到得到的KEY，用于生成下载URL
      * </pre>
      *
      * <code>required string fileId = 1;</code>
@@ -2659,7 +2872,7 @@ public final class Chat {
     java.lang.String getFileId();
     /**
      * <pre>
-     *媒体文件上传到得到的KEY，用于生成下载URL。
+     *媒体文件上传到得到的KEY，用于生成下载URL
      * </pre>
      *
      * <code>required string fileId = 1;</code>
@@ -2669,7 +2882,7 @@ public final class Chat {
 
     /**
      * <pre>
-     *文件的 CRC32 校验码。
+     *文件的 CRC32 校验码
      * </pre>
      *
      * <code>required int32 media_crc32 = 2;</code>
@@ -2677,7 +2890,7 @@ public final class Chat {
     boolean hasMediaCrc32();
     /**
      * <pre>
-     *文件的 CRC32 校验码。
+     *文件的 CRC32 校验码
      * </pre>
      *
      * <code>required int32 media_crc32 = 2;</code>
@@ -2827,7 +3040,7 @@ public final class Chat {
     private volatile java.lang.Object fileId_;
     /**
      * <pre>
-     *媒体文件上传到得到的KEY，用于生成下载URL。
+     *媒体文件上传到得到的KEY，用于生成下载URL
      * </pre>
      *
      * <code>required string fileId = 1;</code>
@@ -2837,7 +3050,7 @@ public final class Chat {
     }
     /**
      * <pre>
-     *媒体文件上传到得到的KEY，用于生成下载URL。
+     *媒体文件上传到得到的KEY，用于生成下载URL
      * </pre>
      *
      * <code>required string fileId = 1;</code>
@@ -2858,7 +3071,7 @@ public final class Chat {
     }
     /**
      * <pre>
-     *媒体文件上传到得到的KEY，用于生成下载URL。
+     *媒体文件上传到得到的KEY，用于生成下载URL
      * </pre>
      *
      * <code>required string fileId = 1;</code>
@@ -2881,7 +3094,7 @@ public final class Chat {
     private int mediaCrc32_;
     /**
      * <pre>
-     *文件的 CRC32 校验码。
+     *文件的 CRC32 校验码
      * </pre>
      *
      * <code>required int32 media_crc32 = 2;</code>
@@ -2891,7 +3104,7 @@ public final class Chat {
     }
     /**
      * <pre>
-     *文件的 CRC32 校验码。
+     *文件的 CRC32 校验码
      * </pre>
      *
      * <code>required int32 media_crc32 = 2;</code>
@@ -3399,7 +3612,7 @@ public final class Chat {
       private java.lang.Object fileId_ = "";
       /**
        * <pre>
-       *媒体文件上传到得到的KEY，用于生成下载URL。
+       *媒体文件上传到得到的KEY，用于生成下载URL
        * </pre>
        *
        * <code>required string fileId = 1;</code>
@@ -3409,7 +3622,7 @@ public final class Chat {
       }
       /**
        * <pre>
-       *媒体文件上传到得到的KEY，用于生成下载URL。
+       *媒体文件上传到得到的KEY，用于生成下载URL
        * </pre>
        *
        * <code>required string fileId = 1;</code>
@@ -3430,7 +3643,7 @@ public final class Chat {
       }
       /**
        * <pre>
-       *媒体文件上传到得到的KEY，用于生成下载URL。
+       *媒体文件上传到得到的KEY，用于生成下载URL
        * </pre>
        *
        * <code>required string fileId = 1;</code>
@@ -3450,7 +3663,7 @@ public final class Chat {
       }
       /**
        * <pre>
-       *媒体文件上传到得到的KEY，用于生成下载URL。
+       *媒体文件上传到得到的KEY，用于生成下载URL
        * </pre>
        *
        * <code>required string fileId = 1;</code>
@@ -3467,7 +3680,7 @@ public final class Chat {
       }
       /**
        * <pre>
-       *媒体文件上传到得到的KEY，用于生成下载URL。
+       *媒体文件上传到得到的KEY，用于生成下载URL
        * </pre>
        *
        * <code>required string fileId = 1;</code>
@@ -3480,7 +3693,7 @@ public final class Chat {
       }
       /**
        * <pre>
-       *媒体文件上传到得到的KEY，用于生成下载URL。
+       *媒体文件上传到得到的KEY，用于生成下载URL
        * </pre>
        *
        * <code>required string fileId = 1;</code>
@@ -3499,7 +3712,7 @@ public final class Chat {
       private int mediaCrc32_ ;
       /**
        * <pre>
-       *文件的 CRC32 校验码。
+       *文件的 CRC32 校验码
        * </pre>
        *
        * <code>required int32 media_crc32 = 2;</code>
@@ -3509,7 +3722,7 @@ public final class Chat {
       }
       /**
        * <pre>
-       *文件的 CRC32 校验码。
+       *文件的 CRC32 校验码
        * </pre>
        *
        * <code>required int32 media_crc32 = 2;</code>
@@ -3519,7 +3732,7 @@ public final class Chat {
       }
       /**
        * <pre>
-       *文件的 CRC32 校验码。
+       *文件的 CRC32 校验码
        * </pre>
        *
        * <code>required int32 media_crc32 = 2;</code>
@@ -3532,7 +3745,7 @@ public final class Chat {
       }
       /**
        * <pre>
-       *文件的 CRC32 校验码。
+       *文件的 CRC32 校验码
        * </pre>
        *
        * <code>required int32 media_crc32 = 2;</code>
@@ -3769,18 +3982,18 @@ public final class Chat {
   static {
     java.lang.String[] descriptorData = {
       "\n#src/main/resources/proto/Chat.proto\022\031b" +
-      "inary.wz.im.common.proto\"\273\002\n\007ChatMsg\022\017\n\007" +
-      "version\030\001 \002(\005\022\n\n\002id\030\002 \002(\003\022=\n\010destType\030\003 " +
-      "\002(\0162+.binary.wz.im.common.proto.ChatMsg." +
-      "DestType\022\016\n\006fromId\030\004 \002(\t\022\016\n\006destId\030\005 \002(\t" +
-      "\022\022\n\ncreateTime\030\006 \002(\003\022;\n\007msgType\030\007 \002(\0162*." +
-      "binary.wz.im.common.proto.ChatMsg.MsgTyp" +
-      "e\022\017\n\007msgBody\030\010 \002(\014\022\020\n\010addition\030  \001(\t\"!\n\010" +
-      "DestType\022\n\n\006SINGLE\020\000\022\t\n\005GROUP\020\001\"\035\n\007MsgTy" +
-      "pe\022\010\n\004TEXT\020\000\022\010\n\004FILE\020\001\"\030\n\010TextBody\022\014\n\004te" +
-      "xt\030\001 \002(\t\"M\n\010FileBody\022\016\n\006fileId\030\001 \002(\t\022\023\n\013" +
-      "media_crc32\030\002 \002(\005\022\r\n\005fSize\030\003 \002(\005\022\r\n\005fNam" +
-      "e\030\004 \002(\tB\006B\004Chat"
+      "inary.wz.im.common.proto\"\310\002\n\007ChatMsg\022\017\n\007" +
+      "version\030\001 \002(\005\022\n\n\002id\030\002 \002(\t\022\013\n\003seq\030\003 \001(\003\022=" +
+      "\n\010destType\030\004 \002(\0162+.binary.wz.im.common.p" +
+      "roto.ChatMsg.DestType\022\016\n\006fromId\030\005 \002(\t\022\016\n" +
+      "\006destId\030\006 \002(\t\022\022\n\ncreateTime\030\007 \002(\003\022;\n\007msg" +
+      "Type\030\010 \002(\0162*.binary.wz.im.common.proto.C" +
+      "hatMsg.MsgType\022\017\n\007msgBody\030\t \002(\014\022\020\n\010addit" +
+      "ion\030  \001(\t\"!\n\010DestType\022\n\n\006SINGLE\020\000\022\t\n\005GRO" +
+      "UP\020\001\"\035\n\007MsgType\022\010\n\004TEXT\020\000\022\010\n\004FILE\020\001\"\030\n\010T" +
+      "extBody\022\014\n\004text\030\001 \002(\t\"M\n\010FileBody\022\016\n\006fil" +
+      "eId\030\001 \002(\t\022\023\n\013media_crc32\030\002 \002(\005\022\r\n\005fSize\030" +
+      "\003 \002(\005\022\r\n\005fName\030\004 \002(\tB\006B\004Chat"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -3799,7 +4012,7 @@ public final class Chat {
     internal_static_binary_wz_im_common_proto_ChatMsg_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_binary_wz_im_common_proto_ChatMsg_descriptor,
-        new java.lang.String[] { "Version", "Id", "DestType", "FromId", "DestId", "CreateTime", "MsgType", "MsgBody", "Addition", });
+        new java.lang.String[] { "Version", "Id", "Seq", "DestType", "FromId", "DestId", "CreateTime", "MsgType", "MsgBody", "Addition", });
     internal_static_binary_wz_im_common_proto_TextBody_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_binary_wz_im_common_proto_TextBody_fieldAccessorTable = new

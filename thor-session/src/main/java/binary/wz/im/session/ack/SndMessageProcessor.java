@@ -1,4 +1,4 @@
-package binary.wz.im.session.processor;
+package binary.wz.im.session.ack;
 
 import com.google.protobuf.Message;
 import org.slf4j.Logger;

@@ -4,8 +4,9 @@ import binary.wz.im.client.context.UserContext;
 import binary.wz.im.common.constant.MsgVersion;
 import binary.wz.im.common.exception.ImException;
 import binary.wz.im.common.proto.Chat;
-import binary.wz.im.common.proto.State;
-import binary.wz.im.session.context.SessionContext;
+import binary.wz.im.common.proto.Internal;
+import binary.wz.im.common.proto.Notify;
+import binary.wz.im.session.util.IdWorker;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Message;
 
@@ -26,11 +27,16 @@ public class ChatApi {
         this.userContext = userContext;
     }
 
-    public Long text(String destId, String text) {
+    /**
+     * 发送文本消息
+     * @param destId
+     * @param text
+     * @return
+     */
+    public String text(String destId, String text) {
         validateLogin();
-
         Chat.ChatMsg chat = Chat.ChatMsg.newBuilder()
-                .setId(SessionContext.nextId(connectionId))
+                .setId(IdWorker.UUID())
                 .setFromId(userContext.getUserId())
                 .setDestId(destId)
                 .setDestType(Chat.ChatMsg.DestType.SINGLE)
@@ -39,8 +45,7 @@ public class ChatApi {
                 .setVersion(MsgVersion.V1.getVersion())
                 .setMsgBody(ByteString.copyFrom(text, StandardCharsets.UTF_8))
                 .build();
-
-        sendToConnector(chat.getId(), chat);
+        this.sendToConnector(chat.getId(), chat);
         return chat.getId();
     }
 
@@ -50,21 +55,56 @@ public class ChatApi {
         }
     }
 
-    private void sendToConnector(Long mid, Message msg) {
+    /**
+     * 向Connector发送消息，并维护发送队列
+     * @param mid
+     * @param msg
+     */
+    private void sendToConnector(String mid, Message msg) {
         userContext.getClientConnectorHandler().writeAndFlush(connectionId, mid, msg);
     }
 
-    public void confirmRead(Chat.ChatMsg msg) {
-        State.StateMsg read = State.StateMsg.newBuilder()
-                .setId(SessionContext.nextId(connectionId))
+    /**
+     * 为ChatMsg回复ACK消息
+     * @param msg
+     */
+    public void confirmChatMsg(Chat.ChatMsg msg) {
+        Internal.InternalMsg ack = Internal.InternalMsg.newBuilder()
+                .setId(IdWorker.UUID())
+                .setSeq(msg.getSeq()) // seq是收到的消息的序列号，ACK消息没有自己的序列号
                 .setVersion(MsgVersion.V1.getVersion())
                 .setFromId(msg.getDestId())
                 .setDestId(msg.getFromId())
                 .setCreateTime(System.currentTimeMillis())
-                .setDestType(msg.getDestType() == Chat.ChatMsg.DestType.SINGLE ? State.StateMsg.DestType.SINGLE : State.StateMsg.DestType.GROUP)
-                .setMsgType(State.StateMsg.MsgType.READ)
-                .setStateMsgId(msg.getId())
+                .setMsgType(Internal.InternalMsg.MsgType.ACK)
+                .setMsgBody(msg.getId())
                 .build();
-        this.sendToConnector(read.getId(), read);
+        this.confirmReceived(ack);
+    }
+
+    /**
+     * 为ChatMsg回复ACK消息
+     * @param msg
+     */
+    public void confirmNotifyMsg(Notify.NotifyMsg msg) {
+        Internal.InternalMsg ack = Internal.InternalMsg.newBuilder()
+                .setId(IdWorker.UUID())
+                .setSeq(msg.getSeq()) // seq是收到的消息的序列号，ACK消息没有自己的序列号
+                .setVersion(MsgVersion.V1.getVersion())
+                .setFromId(msg.getDestId())
+                .setDestId(msg.getFromId())
+                .setCreateTime(System.currentTimeMillis())
+                .setMsgType(Internal.InternalMsg.MsgType.ACK)
+                .setMsgBody(msg.getId())
+                .build();
+        this.confirmReceived(ack);
+    }
+
+    /**
+     * 回复ACK消息
+     * @param msg
+     */
+    private void confirmReceived(Internal.InternalMsg msg) {
+        userContext.getClientConnectorHandler().confirmReceived(msg);
     }
 }

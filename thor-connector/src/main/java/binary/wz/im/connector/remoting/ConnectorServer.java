@@ -24,7 +24,7 @@ import java.util.concurrent.TimeoutException;
 /**
  * @author binarywz
  * @date 2022/5/25 21:54
- * @description: Connector服务端，处理Client连接
+ * @description: Connector服务端，处理Client连接，Connector只提供给通道，不维护消息的可靠性
  */
 public class ConnectorServer {
     private final static Logger logger = LoggerFactory.getLogger(ConnectorServer.class);

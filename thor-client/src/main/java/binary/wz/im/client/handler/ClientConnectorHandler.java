@@ -1,15 +1,14 @@
 package binary.wz.im.client.handler;
 
 import binary.wz.im.client.api.MsgListener;
-import binary.wz.im.common.parser.MessageParser;
 import binary.wz.im.common.proto.Chat;
 import binary.wz.im.common.proto.Internal;
-import binary.wz.im.common.proto.State;
+import binary.wz.im.common.proto.Notify;
+import binary.wz.im.session.processor.NotifyMessageProcessor;
 import binary.wz.im.session.ack.RcvAckWindow;
 import binary.wz.im.session.ack.SndAckWindow;
 import binary.wz.im.session.processor.AbstractMessageProcessor;
 import binary.wz.im.session.processor.InternalMessageProcessor;
-import binary.wz.im.session.processor.StateMessageProcessor;
 import com.google.protobuf.Message;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -65,10 +64,6 @@ public class ClientConnectorHandler extends SimpleChannelInboundHandler<Message>
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Message msg) throws Exception {
         logger.debug("[client] get msg:\r\n{}", msg.toString());
-
-        MessageParser.validateFrom(msg, Internal.InternalMsg.Module.CONNECTOR);
-        MessageParser.validateDest(msg, Internal.InternalMsg.Module.CLIENT);
-
         connectorMessageProcessor.process(msg, ctx);
     }
 
@@ -84,9 +79,22 @@ public class ClientConnectorHandler extends SimpleChannelInboundHandler<Message>
         msgListener.hasException(ctx, cause);
     }
 
-    public void writeAndFlush(Serializable connectionId, Long mid, Message msg) {
+    /**
+     * 回复ACK消息
+     * @param msg
+     */
+    public void confirmReceived(Internal.InternalMsg msg) {
+        this.ctx.writeAndFlush(msg);
+    }
+
+    /**
+     * 向Connector发送消息，并维护发送队列
+     * @param connectionId
+     * @param mid
+     * @param msg
+     */
+    public void writeAndFlush(Serializable connectionId, String mid, Message msg) {
         SndAckWindow.offer(connectionId, mid, msg, m -> ctx.writeAndFlush(m))
-                .thenAccept(m -> msgListener.hasSent(mid))
                 .exceptionally(e -> {
                     logger.error("[client] send to connector failed", e);
                     return null;
@@ -105,41 +113,44 @@ public class ClientConnectorHandler extends SimpleChannelInboundHandler<Message>
 
         @Override
         public void registerProcessors() {
+            /**
+             * 处理内部消息
+             */
             InternalMessageProcessor internalMessageProcessor = new InternalMessageProcessor(3);
             internalMessageProcessor.register(Internal.InternalMsg.MsgType.ACK, (m, ctx) -> sndAckWindow.ack(m));
             internalMessageProcessor.register(Internal.InternalMsg.MsgType.ERROR, (m, ctx) ->
                     logger.error("[client] get error from connector {}", m.getMsgBody()));
             register(Internal.InternalMsg.class, internalMessageProcessor.generateFun());
 
-            StateMessageProcessor stateMessageProcessor = new StateMessageProcessor(2);
-            stateMessageProcessor.register(State.StateMsg.MsgType.DELIVERED, (m, ctx) ->
-                    offerState(m.getId(), m, ignore -> msgListener.hasDelivered(m.getStateMsgId())));
-            stateMessageProcessor.register(State.StateMsg.MsgType.READ, (m, ctx) ->
-                    offerState(m.getId(), m, ignore -> msgListener.hasRead(m.getStateMsgId())));
-            register(State.StateMsg.class, stateMessageProcessor.generateFun());
+            /**
+             * 处理通知消息
+             */
+            NotifyMessageProcessor notifyMessageProcessor = new NotifyMessageProcessor(2);
+            notifyMessageProcessor.register(Notify.NotifyMsg.MsgType.DELIVERED, (m, ctx) ->
+                    offerNotify(m, ignore -> msgListener.confirmNotifyMsg(m)));
+            notifyMessageProcessor.register(Notify.NotifyMsg.MsgType.READ, (m, ctx) ->
+                    offerNotify(m, ignore -> msgListener.confirmNotifyMsg(m)));
+            register(Notify.NotifyMsg.class, notifyMessageProcessor.generateFun());
 
             /**
-             * TODO 此处客户端收到消息后立马回复了一条READ消息，后续改为回复ACK消息
+             * 处理聊天消息
              */
             register(Chat.ChatMsg.class, (m, ctx) ->
-                    offerChat(m.getId(), m, ignore -> msgListener.read(m)));
+                    offerChat(m, ignore -> msgListener.confirmChatMsg(m)));
         }
 
-        private void offerChat(Long mid, Chat.ChatMsg m, Consumer<Message> consumer) {
+        private void offerChat(Chat.ChatMsg m, Consumer<Message> consumer) {
             Chat.ChatMsg copy = Chat.ChatMsg.newBuilder().mergeFrom(m).build();
-            offer(mid, copy, consumer);
+            offer(m.getId(), m.getSeq(), m.getDestId(), m.getFromId(), copy, consumer);
         }
 
-        private void offerState(Long mid, State.StateMsg m, Consumer<Message> consumer) {
-            State.StateMsg copy = State.StateMsg.newBuilder().mergeFrom(m).build();
-            offer(mid, copy, consumer);
+        private void offerNotify(Notify.NotifyMsg m, Consumer<Message> consumer) {
+            Notify.NotifyMsg copy = Notify.NotifyMsg.newBuilder().mergeFrom(m).build();
+            offer(m.getId(), m.getSeq(), m.getDestId(), m.getFromId(), copy, consumer);
         }
 
-        private void offer(Long mid, Message m, Consumer<Message> consumer) {
-            rcvAckWindow.offer(mid,
-                    Internal.InternalMsg.Module.CLIENT,
-                    Internal.InternalMsg.Module.CONNECTOR,
-                    ctx, m, consumer);
+        private void offer(String mid, Long seq, String fromId, String destId, Message m, Consumer<Message> consumer) {
+            rcvAckWindow.offer(mid, seq, fromId, destId, ctx, m, consumer);
         }
     }
 }

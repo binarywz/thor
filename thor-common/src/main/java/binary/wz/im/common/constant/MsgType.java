@@ -2,7 +2,7 @@ package binary.wz.im.common.constant;
 
 import binary.wz.im.common.proto.Chat;
 import binary.wz.im.common.proto.Internal;
-import binary.wz.im.common.proto.State;
+import binary.wz.im.common.proto.Notify;
 
 import java.util.stream.Stream;
 
@@ -24,9 +24,9 @@ public enum MsgType {
     INTERNAL(1, Internal.InternalMsg.class),
 
     /**
-     * STATE消息，如已读/已投递
+     * 通知消息，如已读/已投递
      */
-    STATE(2, State.StateMsg.class);
+    NOTIFY(2, Notify.NotifyMsg.class);
 
     int code;
     Class<?> clazz;

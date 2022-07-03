@@ -5,6 +5,7 @@ import binary.wz.im.client.api.MsgListener;
 import binary.wz.im.client.domain.Friend;
 import binary.wz.im.common.domain.UserInfo;
 import binary.wz.im.common.proto.Chat;
+import binary.wz.im.common.proto.Notify;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,11 +36,21 @@ public class ClientMsgListener implements MsgListener {
     }
 
     @Override
-    public void read(Chat.ChatMsg chatMsg) {
+    public void confirmChatMsg(Chat.ChatMsg chatMsg) {
         // when it's confirmed that user has read this msg
         logger.info(friendMap.get(chatMsg.getFromId()).getUsername() + ": "
                 + chatMsg.getMsgBody().toStringUtf8());
-        chatApi.confirmRead(chatMsg);
+        chatApi.confirmChatMsg(chatMsg);
+        // TODO MQ异步存储消息
+    }
+
+    @Override
+    public void confirmNotifyMsg(Notify.NotifyMsg notifyMsg) {
+        // when it's confirmed that user has read this msg
+        logger.info(friendMap.get(notifyMsg.getFromId()).getUsername() + ": "
+                + notifyMsg.getMsgBody());
+        chatApi.confirmNotifyMsg(notifyMsg);
+        // TODO MQ异步存储消息
     }
 
     @Override

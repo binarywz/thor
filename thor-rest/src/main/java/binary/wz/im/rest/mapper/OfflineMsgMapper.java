@@ -14,5 +14,5 @@ public interface OfflineMsgMapper extends BaseMapper<OfflineMsg> {
      * @param msgId
      * @return
      */
-    int markReadOfflineMsg(Long msgId);
+    int markReadOfflineMsg(String msgId);
 }

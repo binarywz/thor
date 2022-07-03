@@ -20,7 +20,7 @@ public final class Internal {
 
     /**
      * <pre>
-     *协议版本号。第一版本：1，以此类推。
+     *协议版本号
      * </pre>
      *
      * <code>required int32 version = 1;</code>
@@ -28,7 +28,7 @@ public final class Internal {
     boolean hasVersion();
     /**
      * <pre>
-     *协议版本号。第一版本：1，以此类推。
+     *协议版本号
      * </pre>
      *
      * <code>required int32 version = 1;</code>
@@ -37,61 +37,105 @@ public final class Internal {
 
     /**
      * <pre>
-     *消息id
+     *消息标识
      * </pre>
      *
-     * <code>required int64 id = 2;</code>
+     * <code>required string id = 2;</code>
      */
     boolean hasId();
     /**
      * <pre>
-     *消息id
+     *消息标识
      * </pre>
      *
-     * <code>required int64 id = 2;</code>
+     * <code>required string id = 2;</code>
      */
-    long getId();
+    java.lang.String getId();
+    /**
+     * <pre>
+     *消息标识
+     * </pre>
+     *
+     * <code>required string id = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getIdBytes();
 
     /**
      * <pre>
-     *发送模块
+     *消息序号
      * </pre>
      *
-     * <code>required .binary.wz.im.common.proto.InternalMsg.Module from = 3;</code>
+     * <code>optional int64 seq = 3;</code>
      */
-    boolean hasFrom();
+    boolean hasSeq();
     /**
      * <pre>
-     *发送模块
+     *消息序号
      * </pre>
      *
-     * <code>required .binary.wz.im.common.proto.InternalMsg.Module from = 3;</code>
+     * <code>optional int64 seq = 3;</code>
      */
-    binary.wz.im.common.proto.Internal.InternalMsg.Module getFrom();
+    long getSeq();
 
     /**
      * <pre>
-     *接收模块
+     *发送者userId
      * </pre>
      *
-     * <code>required .binary.wz.im.common.proto.InternalMsg.Module dest = 4;</code>
+     * <code>optional string fromId = 4;</code>
      */
-    boolean hasDest();
+    boolean hasFromId();
     /**
      * <pre>
-     *接收模块
+     *发送者userId
      * </pre>
      *
-     * <code>required .binary.wz.im.common.proto.InternalMsg.Module dest = 4;</code>
+     * <code>optional string fromId = 4;</code>
      */
-    binary.wz.im.common.proto.Internal.InternalMsg.Module getDest();
+    java.lang.String getFromId();
+    /**
+     * <pre>
+     *发送者userId
+     * </pre>
+     *
+     * <code>optional string fromId = 4;</code>
+     */
+    com.google.protobuf.ByteString
+        getFromIdBytes();
+
+    /**
+     * <pre>
+     *接收者userId
+     * </pre>
+     *
+     * <code>optional string destId = 5;</code>
+     */
+    boolean hasDestId();
+    /**
+     * <pre>
+     *接收者userId
+     * </pre>
+     *
+     * <code>optional string destId = 5;</code>
+     */
+    java.lang.String getDestId();
+    /**
+     * <pre>
+     *接收者userId
+     * </pre>
+     *
+     * <code>optional string destId = 5;</code>
+     */
+    com.google.protobuf.ByteString
+        getDestIdBytes();
 
     /**
      * <pre>
      *发送时间
      * </pre>
      *
-     * <code>required int64 createTime = 5;</code>
+     * <code>required int64 createTime = 6;</code>
      */
     boolean hasCreateTime();
     /**
@@ -99,7 +143,7 @@ public final class Internal {
      *发送时间
      * </pre>
      *
-     * <code>required int64 createTime = 5;</code>
+     * <code>required int64 createTime = 6;</code>
      */
     long getCreateTime();
 
@@ -108,7 +152,7 @@ public final class Internal {
      *消息类型
      * </pre>
      *
-     * <code>required .binary.wz.im.common.proto.InternalMsg.MsgType msgType = 6;</code>
+     * <code>required .binary.wz.im.common.proto.InternalMsg.MsgType msgType = 7;</code>
      */
     boolean hasMsgType();
     /**
@@ -116,7 +160,7 @@ public final class Internal {
      *消息类型
      * </pre>
      *
-     * <code>required .binary.wz.im.common.proto.InternalMsg.MsgType msgType = 6;</code>
+     * <code>required .binary.wz.im.common.proto.InternalMsg.MsgType msgType = 7;</code>
      */
     binary.wz.im.common.proto.Internal.InternalMsg.MsgType getMsgType();
 
@@ -125,7 +169,7 @@ public final class Internal {
      *消息体
      * </pre>
      *
-     * <code>optional string msgBody = 7;</code>
+     * <code>optional string msgBody = 8;</code>
      */
     boolean hasMsgBody();
     /**
@@ -133,7 +177,7 @@ public final class Internal {
      *消息体
      * </pre>
      *
-     * <code>optional string msgBody = 7;</code>
+     * <code>optional string msgBody = 8;</code>
      */
     java.lang.String getMsgBody();
     /**
@@ -141,7 +185,7 @@ public final class Internal {
      *消息体
      * </pre>
      *
-     * <code>optional string msgBody = 7;</code>
+     * <code>optional string msgBody = 8;</code>
      */
     com.google.protobuf.ByteString
         getMsgBodyBytes();
@@ -159,8 +203,9 @@ public final class Internal {
       super(builder);
     }
     private InternalMsg() {
-      from_ = 0;
-      dest_ = 0;
+      id_ = "";
+      fromId_ = "";
+      destId_ = "";
       msgType_ = 0;
       msgBody_ = "";
     }
@@ -194,55 +239,49 @@ public final class Internal {
               version_ = input.readInt32();
               break;
             }
-            case 16: {
+            case 18: {
+              com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000002;
-              id_ = input.readInt64();
+              id_ = bs;
               break;
             }
             case 24: {
-              int rawValue = input.readEnum();
-                @SuppressWarnings("deprecation")
-              binary.wz.im.common.proto.Internal.InternalMsg.Module value = binary.wz.im.common.proto.Internal.InternalMsg.Module.valueOf(rawValue);
-              if (value == null) {
-                unknownFields.mergeVarintField(3, rawValue);
-              } else {
-                bitField0_ |= 0x00000004;
-                from_ = rawValue;
-              }
+              bitField0_ |= 0x00000004;
+              seq_ = input.readInt64();
               break;
             }
-            case 32: {
-              int rawValue = input.readEnum();
-                @SuppressWarnings("deprecation")
-              binary.wz.im.common.proto.Internal.InternalMsg.Module value = binary.wz.im.common.proto.Internal.InternalMsg.Module.valueOf(rawValue);
-              if (value == null) {
-                unknownFields.mergeVarintField(4, rawValue);
-              } else {
-                bitField0_ |= 0x00000008;
-                dest_ = rawValue;
-              }
+            case 34: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000008;
+              fromId_ = bs;
               break;
             }
-            case 40: {
+            case 42: {
+              com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000010;
-              createTime_ = input.readInt64();
+              destId_ = bs;
               break;
             }
             case 48: {
+              bitField0_ |= 0x00000020;
+              createTime_ = input.readInt64();
+              break;
+            }
+            case 56: {
               int rawValue = input.readEnum();
                 @SuppressWarnings("deprecation")
               binary.wz.im.common.proto.Internal.InternalMsg.MsgType value = binary.wz.im.common.proto.Internal.InternalMsg.MsgType.valueOf(rawValue);
               if (value == null) {
-                unknownFields.mergeVarintField(6, rawValue);
+                unknownFields.mergeVarintField(7, rawValue);
               } else {
-                bitField0_ |= 0x00000020;
+                bitField0_ |= 0x00000040;
                 msgType_ = rawValue;
               }
               break;
             }
-            case 58: {
+            case 66: {
               com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000040;
+              bitField0_ |= 0x00000080;
               msgBody_ = bs;
               break;
             }
@@ -276,105 +315,6 @@ public final class Internal {
       return binary.wz.im.common.proto.Internal.internal_static_binary_wz_im_common_proto_InternalMsg_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               binary.wz.im.common.proto.Internal.InternalMsg.class, binary.wz.im.common.proto.Internal.InternalMsg.Builder.class);
-    }
-
-    /**
-     * Protobuf enum {@code binary.wz.im.common.proto.InternalMsg.Module}
-     */
-    public enum Module
-        implements com.google.protobuf.ProtocolMessageEnum {
-      /**
-       * <code>CONNECTOR = 0;</code>
-       */
-      CONNECTOR(0),
-      /**
-       * <code>TRANSFER = 1;</code>
-       */
-      TRANSFER(1),
-      /**
-       * <code>CLIENT = 2;</code>
-       */
-      CLIENT(2),
-      ;
-
-      /**
-       * <code>CONNECTOR = 0;</code>
-       */
-      public static final int CONNECTOR_VALUE = 0;
-      /**
-       * <code>TRANSFER = 1;</code>
-       */
-      public static final int TRANSFER_VALUE = 1;
-      /**
-       * <code>CLIENT = 2;</code>
-       */
-      public static final int CLIENT_VALUE = 2;
-
-
-      public final int getNumber() {
-        return value;
-      }
-
-      /**
-       * @deprecated Use {@link #forNumber(int)} instead.
-       */
-      @java.lang.Deprecated
-      public static Module valueOf(int value) {
-        return forNumber(value);
-      }
-
-      public static Module forNumber(int value) {
-        switch (value) {
-          case 0: return CONNECTOR;
-          case 1: return TRANSFER;
-          case 2: return CLIENT;
-          default: return null;
-        }
-      }
-
-      public static com.google.protobuf.Internal.EnumLiteMap<Module>
-          internalGetValueMap() {
-        return internalValueMap;
-      }
-      private static final com.google.protobuf.Internal.EnumLiteMap<
-          Module> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<Module>() {
-              public Module findValueByNumber(int number) {
-                return Module.forNumber(number);
-              }
-            };
-
-      public final com.google.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
-        return getDescriptor().getValues().get(ordinal());
-      }
-      public final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
-        return getDescriptor();
-      }
-      public static final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
-        return binary.wz.im.common.proto.Internal.InternalMsg.getDescriptor().getEnumTypes().get(0);
-      }
-
-      private static final Module[] VALUES = values();
-
-      public static Module valueOf(
-          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
-        if (desc.getType() != getDescriptor()) {
-          throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
-        }
-        return VALUES[desc.getIndex()];
-      }
-
-      private final int value;
-
-      private Module(int value) {
-        this.value = value;
-      }
-
-      // @@protoc_insertion_point(enum_scope:binary.wz.im.common.proto.InternalMsg.Module)
     }
 
     /**
@@ -453,7 +393,7 @@ public final class Internal {
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
           getDescriptor() {
-        return binary.wz.im.common.proto.Internal.InternalMsg.getDescriptor().getEnumTypes().get(1);
+        return binary.wz.im.common.proto.Internal.InternalMsg.getDescriptor().getEnumTypes().get(0);
       }
 
       private static final MsgType[] VALUES = values();
@@ -481,7 +421,7 @@ public final class Internal {
     private int version_;
     /**
      * <pre>
-     *协议版本号。第一版本：1，以此类推。
+     *协议版本号
      * </pre>
      *
      * <code>required int32 version = 1;</code>
@@ -491,7 +431,7 @@ public final class Internal {
     }
     /**
      * <pre>
-     *协议版本号。第一版本：1，以此类推。
+     *协议版本号
      * </pre>
      *
      * <code>required int32 version = 1;</code>
@@ -501,119 +441,231 @@ public final class Internal {
     }
 
     public static final int ID_FIELD_NUMBER = 2;
-    private long id_;
+    private volatile java.lang.Object id_;
     /**
      * <pre>
-     *消息id
+     *消息标识
      * </pre>
      *
-     * <code>required int64 id = 2;</code>
+     * <code>required string id = 2;</code>
      */
     public boolean hasId() {
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
      * <pre>
-     *消息id
+     *消息标识
      * </pre>
      *
-     * <code>required int64 id = 2;</code>
+     * <code>required string id = 2;</code>
      */
-    public long getId() {
-      return id_;
+    public java.lang.String getId() {
+      java.lang.Object ref = id_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          id_ = s;
+        }
+        return s;
+      }
     }
-
-    public static final int FROM_FIELD_NUMBER = 3;
-    private int from_;
     /**
      * <pre>
-     *发送模块
+     *消息标识
      * </pre>
      *
-     * <code>required .binary.wz.im.common.proto.InternalMsg.Module from = 3;</code>
+     * <code>required string id = 2;</code>
      */
-    public boolean hasFrom() {
+    public com.google.protobuf.ByteString
+        getIdBytes() {
+      java.lang.Object ref = id_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        id_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int SEQ_FIELD_NUMBER = 3;
+    private long seq_;
+    /**
+     * <pre>
+     *消息序号
+     * </pre>
+     *
+     * <code>optional int64 seq = 3;</code>
+     */
+    public boolean hasSeq() {
       return ((bitField0_ & 0x00000004) != 0);
     }
     /**
      * <pre>
-     *发送模块
+     *消息序号
      * </pre>
      *
-     * <code>required .binary.wz.im.common.proto.InternalMsg.Module from = 3;</code>
+     * <code>optional int64 seq = 3;</code>
      */
-    public binary.wz.im.common.proto.Internal.InternalMsg.Module getFrom() {
-      @SuppressWarnings("deprecation")
-      binary.wz.im.common.proto.Internal.InternalMsg.Module result = binary.wz.im.common.proto.Internal.InternalMsg.Module.valueOf(from_);
-      return result == null ? binary.wz.im.common.proto.Internal.InternalMsg.Module.CONNECTOR : result;
+    public long getSeq() {
+      return seq_;
     }
 
-    public static final int DEST_FIELD_NUMBER = 4;
-    private int dest_;
+    public static final int FROMID_FIELD_NUMBER = 4;
+    private volatile java.lang.Object fromId_;
     /**
      * <pre>
-     *接收模块
+     *发送者userId
      * </pre>
      *
-     * <code>required .binary.wz.im.common.proto.InternalMsg.Module dest = 4;</code>
+     * <code>optional string fromId = 4;</code>
      */
-    public boolean hasDest() {
+    public boolean hasFromId() {
       return ((bitField0_ & 0x00000008) != 0);
     }
     /**
      * <pre>
-     *接收模块
+     *发送者userId
      * </pre>
      *
-     * <code>required .binary.wz.im.common.proto.InternalMsg.Module dest = 4;</code>
+     * <code>optional string fromId = 4;</code>
      */
-    public binary.wz.im.common.proto.Internal.InternalMsg.Module getDest() {
-      @SuppressWarnings("deprecation")
-      binary.wz.im.common.proto.Internal.InternalMsg.Module result = binary.wz.im.common.proto.Internal.InternalMsg.Module.valueOf(dest_);
-      return result == null ? binary.wz.im.common.proto.Internal.InternalMsg.Module.CONNECTOR : result;
+    public java.lang.String getFromId() {
+      java.lang.Object ref = fromId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          fromId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     *发送者userId
+     * </pre>
+     *
+     * <code>optional string fromId = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getFromIdBytes() {
+      java.lang.Object ref = fromId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        fromId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
-    public static final int CREATETIME_FIELD_NUMBER = 5;
+    public static final int DESTID_FIELD_NUMBER = 5;
+    private volatile java.lang.Object destId_;
+    /**
+     * <pre>
+     *接收者userId
+     * </pre>
+     *
+     * <code>optional string destId = 5;</code>
+     */
+    public boolean hasDestId() {
+      return ((bitField0_ & 0x00000010) != 0);
+    }
+    /**
+     * <pre>
+     *接收者userId
+     * </pre>
+     *
+     * <code>optional string destId = 5;</code>
+     */
+    public java.lang.String getDestId() {
+      java.lang.Object ref = destId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          destId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     *接收者userId
+     * </pre>
+     *
+     * <code>optional string destId = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDestIdBytes() {
+      java.lang.Object ref = destId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        destId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int CREATETIME_FIELD_NUMBER = 6;
     private long createTime_;
     /**
      * <pre>
      *发送时间
      * </pre>
      *
-     * <code>required int64 createTime = 5;</code>
+     * <code>required int64 createTime = 6;</code>
      */
     public boolean hasCreateTime() {
-      return ((bitField0_ & 0x00000010) != 0);
+      return ((bitField0_ & 0x00000020) != 0);
     }
     /**
      * <pre>
      *发送时间
      * </pre>
      *
-     * <code>required int64 createTime = 5;</code>
+     * <code>required int64 createTime = 6;</code>
      */
     public long getCreateTime() {
       return createTime_;
     }
 
-    public static final int MSGTYPE_FIELD_NUMBER = 6;
+    public static final int MSGTYPE_FIELD_NUMBER = 7;
     private int msgType_;
     /**
      * <pre>
      *消息类型
      * </pre>
      *
-     * <code>required .binary.wz.im.common.proto.InternalMsg.MsgType msgType = 6;</code>
+     * <code>required .binary.wz.im.common.proto.InternalMsg.MsgType msgType = 7;</code>
      */
     public boolean hasMsgType() {
-      return ((bitField0_ & 0x00000020) != 0);
+      return ((bitField0_ & 0x00000040) != 0);
     }
     /**
      * <pre>
      *消息类型
      * </pre>
      *
-     * <code>required .binary.wz.im.common.proto.InternalMsg.MsgType msgType = 6;</code>
+     * <code>required .binary.wz.im.common.proto.InternalMsg.MsgType msgType = 7;</code>
      */
     public binary.wz.im.common.proto.Internal.InternalMsg.MsgType getMsgType() {
       @SuppressWarnings("deprecation")
@@ -621,24 +673,24 @@ public final class Internal {
       return result == null ? binary.wz.im.common.proto.Internal.InternalMsg.MsgType.GREET : result;
     }
 
-    public static final int MSGBODY_FIELD_NUMBER = 7;
+    public static final int MSGBODY_FIELD_NUMBER = 8;
     private volatile java.lang.Object msgBody_;
     /**
      * <pre>
      *消息体
      * </pre>
      *
-     * <code>optional string msgBody = 7;</code>
+     * <code>optional string msgBody = 8;</code>
      */
     public boolean hasMsgBody() {
-      return ((bitField0_ & 0x00000040) != 0);
+      return ((bitField0_ & 0x00000080) != 0);
     }
     /**
      * <pre>
      *消息体
      * </pre>
      *
-     * <code>optional string msgBody = 7;</code>
+     * <code>optional string msgBody = 8;</code>
      */
     public java.lang.String getMsgBody() {
       java.lang.Object ref = msgBody_;
@@ -659,7 +711,7 @@ public final class Internal {
      *消息体
      * </pre>
      *
-     * <code>optional string msgBody = 7;</code>
+     * <code>optional string msgBody = 8;</code>
      */
     public com.google.protobuf.ByteString
         getMsgBodyBytes() {
@@ -690,14 +742,6 @@ public final class Internal {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!hasFrom()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasDest()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       if (!hasCreateTime()) {
         memoizedIsInitialized = 0;
         return false;
@@ -717,22 +761,25 @@ public final class Internal {
         output.writeInt32(1, version_);
       }
       if (((bitField0_ & 0x00000002) != 0)) {
-        output.writeInt64(2, id_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, id_);
       }
       if (((bitField0_ & 0x00000004) != 0)) {
-        output.writeEnum(3, from_);
+        output.writeInt64(3, seq_);
       }
       if (((bitField0_ & 0x00000008) != 0)) {
-        output.writeEnum(4, dest_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, fromId_);
       }
       if (((bitField0_ & 0x00000010) != 0)) {
-        output.writeInt64(5, createTime_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, destId_);
       }
       if (((bitField0_ & 0x00000020) != 0)) {
-        output.writeEnum(6, msgType_);
+        output.writeInt64(6, createTime_);
       }
       if (((bitField0_ & 0x00000040) != 0)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, msgBody_);
+        output.writeEnum(7, msgType_);
+      }
+      if (((bitField0_ & 0x00000080) != 0)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 8, msgBody_);
       }
       unknownFields.writeTo(output);
     }
@@ -748,27 +795,28 @@ public final class Internal {
           .computeInt32Size(1, version_);
       }
       if (((bitField0_ & 0x00000002) != 0)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(2, id_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, id_);
       }
       if (((bitField0_ & 0x00000004) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(3, from_);
+          .computeInt64Size(3, seq_);
       }
       if (((bitField0_ & 0x00000008) != 0)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(4, dest_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, fromId_);
       }
       if (((bitField0_ & 0x00000010) != 0)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(5, createTime_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, destId_);
       }
       if (((bitField0_ & 0x00000020) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(6, msgType_);
+          .computeInt64Size(6, createTime_);
       }
       if (((bitField0_ & 0x00000040) != 0)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, msgBody_);
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(7, msgType_);
+      }
+      if (((bitField0_ & 0x00000080) != 0)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, msgBody_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -792,16 +840,23 @@ public final class Internal {
       }
       if (hasId() != other.hasId()) return false;
       if (hasId()) {
-        if (getId()
-            != other.getId()) return false;
+        if (!getId()
+            .equals(other.getId())) return false;
       }
-      if (hasFrom() != other.hasFrom()) return false;
-      if (hasFrom()) {
-        if (from_ != other.from_) return false;
+      if (hasSeq() != other.hasSeq()) return false;
+      if (hasSeq()) {
+        if (getSeq()
+            != other.getSeq()) return false;
       }
-      if (hasDest() != other.hasDest()) return false;
-      if (hasDest()) {
-        if (dest_ != other.dest_) return false;
+      if (hasFromId() != other.hasFromId()) return false;
+      if (hasFromId()) {
+        if (!getFromId()
+            .equals(other.getFromId())) return false;
+      }
+      if (hasDestId() != other.hasDestId()) return false;
+      if (hasDestId()) {
+        if (!getDestId()
+            .equals(other.getDestId())) return false;
       }
       if (hasCreateTime() != other.hasCreateTime()) return false;
       if (hasCreateTime()) {
@@ -834,16 +889,20 @@ public final class Internal {
       }
       if (hasId()) {
         hash = (37 * hash) + ID_FIELD_NUMBER;
+        hash = (53 * hash) + getId().hashCode();
+      }
+      if (hasSeq()) {
+        hash = (37 * hash) + SEQ_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-            getId());
+            getSeq());
       }
-      if (hasFrom()) {
-        hash = (37 * hash) + FROM_FIELD_NUMBER;
-        hash = (53 * hash) + from_;
+      if (hasFromId()) {
+        hash = (37 * hash) + FROMID_FIELD_NUMBER;
+        hash = (53 * hash) + getFromId().hashCode();
       }
-      if (hasDest()) {
-        hash = (37 * hash) + DEST_FIELD_NUMBER;
-        hash = (53 * hash) + dest_;
+      if (hasDestId()) {
+        hash = (37 * hash) + DESTID_FIELD_NUMBER;
+        hash = (53 * hash) + getDestId().hashCode();
       }
       if (hasCreateTime()) {
         hash = (37 * hash) + CREATETIME_FIELD_NUMBER;
@@ -993,18 +1052,20 @@ public final class Internal {
         super.clear();
         version_ = 0;
         bitField0_ = (bitField0_ & ~0x00000001);
-        id_ = 0L;
+        id_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
-        from_ = 0;
+        seq_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000004);
-        dest_ = 0;
+        fromId_ = "";
         bitField0_ = (bitField0_ & ~0x00000008);
-        createTime_ = 0L;
+        destId_ = "";
         bitField0_ = (bitField0_ & ~0x00000010);
-        msgType_ = 0;
+        createTime_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000020);
-        msgBody_ = "";
+        msgType_ = 0;
         bitField0_ = (bitField0_ & ~0x00000040);
+        msgBody_ = "";
+        bitField0_ = (bitField0_ & ~0x00000080);
         return this;
       }
 
@@ -1038,27 +1099,31 @@ public final class Internal {
           to_bitField0_ |= 0x00000001;
         }
         if (((from_bitField0_ & 0x00000002) != 0)) {
-          result.id_ = id_;
           to_bitField0_ |= 0x00000002;
         }
+        result.id_ = id_;
         if (((from_bitField0_ & 0x00000004) != 0)) {
+          result.seq_ = seq_;
           to_bitField0_ |= 0x00000004;
         }
-        result.from_ = from_;
         if (((from_bitField0_ & 0x00000008) != 0)) {
           to_bitField0_ |= 0x00000008;
         }
-        result.dest_ = dest_;
+        result.fromId_ = fromId_;
         if (((from_bitField0_ & 0x00000010) != 0)) {
-          result.createTime_ = createTime_;
           to_bitField0_ |= 0x00000010;
         }
+        result.destId_ = destId_;
         if (((from_bitField0_ & 0x00000020) != 0)) {
+          result.createTime_ = createTime_;
           to_bitField0_ |= 0x00000020;
         }
-        result.msgType_ = msgType_;
         if (((from_bitField0_ & 0x00000040) != 0)) {
           to_bitField0_ |= 0x00000040;
+        }
+        result.msgType_ = msgType_;
+        if (((from_bitField0_ & 0x00000080) != 0)) {
+          to_bitField0_ |= 0x00000080;
         }
         result.msgBody_ = msgBody_;
         result.bitField0_ = to_bitField0_;
@@ -1114,13 +1179,22 @@ public final class Internal {
           setVersion(other.getVersion());
         }
         if (other.hasId()) {
-          setId(other.getId());
+          bitField0_ |= 0x00000002;
+          id_ = other.id_;
+          onChanged();
         }
-        if (other.hasFrom()) {
-          setFrom(other.getFrom());
+        if (other.hasSeq()) {
+          setSeq(other.getSeq());
         }
-        if (other.hasDest()) {
-          setDest(other.getDest());
+        if (other.hasFromId()) {
+          bitField0_ |= 0x00000008;
+          fromId_ = other.fromId_;
+          onChanged();
+        }
+        if (other.hasDestId()) {
+          bitField0_ |= 0x00000010;
+          destId_ = other.destId_;
+          onChanged();
         }
         if (other.hasCreateTime()) {
           setCreateTime(other.getCreateTime());
@@ -1129,7 +1203,7 @@ public final class Internal {
           setMsgType(other.getMsgType());
         }
         if (other.hasMsgBody()) {
-          bitField0_ |= 0x00000040;
+          bitField0_ |= 0x00000080;
           msgBody_ = other.msgBody_;
           onChanged();
         }
@@ -1144,12 +1218,6 @@ public final class Internal {
           return false;
         }
         if (!hasId()) {
-          return false;
-        }
-        if (!hasFrom()) {
-          return false;
-        }
-        if (!hasDest()) {
           return false;
         }
         if (!hasCreateTime()) {
@@ -1184,7 +1252,7 @@ public final class Internal {
       private int version_ ;
       /**
        * <pre>
-       *协议版本号。第一版本：1，以此类推。
+       *协议版本号
        * </pre>
        *
        * <code>required int32 version = 1;</code>
@@ -1194,7 +1262,7 @@ public final class Internal {
       }
       /**
        * <pre>
-       *协议版本号。第一版本：1，以此类推。
+       *协议版本号
        * </pre>
        *
        * <code>required int32 version = 1;</code>
@@ -1204,7 +1272,7 @@ public final class Internal {
       }
       /**
        * <pre>
-       *协议版本号。第一版本：1，以此类推。
+       *协议版本号
        * </pre>
        *
        * <code>required int32 version = 1;</code>
@@ -1217,7 +1285,7 @@ public final class Internal {
       }
       /**
        * <pre>
-       *协议版本号。第一版本：1，以此类推。
+       *协议版本号
        * </pre>
        *
        * <code>required int32 version = 1;</code>
@@ -1229,156 +1297,350 @@ public final class Internal {
         return this;
       }
 
-      private long id_ ;
+      private java.lang.Object id_ = "";
       /**
        * <pre>
-       *消息id
+       *消息标识
        * </pre>
        *
-       * <code>required int64 id = 2;</code>
+       * <code>required string id = 2;</code>
        */
       public boolean hasId() {
         return ((bitField0_ & 0x00000002) != 0);
       }
       /**
        * <pre>
-       *消息id
+       *消息标识
        * </pre>
        *
-       * <code>required int64 id = 2;</code>
+       * <code>required string id = 2;</code>
        */
-      public long getId() {
-        return id_;
+      public java.lang.String getId() {
+        java.lang.Object ref = id_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            id_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
        * <pre>
-       *消息id
+       *消息标识
        * </pre>
        *
-       * <code>required int64 id = 2;</code>
+       * <code>required string id = 2;</code>
        */
-      public Builder setId(long value) {
-        bitField0_ |= 0x00000002;
+      public com.google.protobuf.ByteString
+          getIdBytes() {
+        java.lang.Object ref = id_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          id_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       *消息标识
+       * </pre>
+       *
+       * <code>required string id = 2;</code>
+       */
+      public Builder setId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
         id_ = value;
         onChanged();
         return this;
       }
       /**
        * <pre>
-       *消息id
+       *消息标识
        * </pre>
        *
-       * <code>required int64 id = 2;</code>
+       * <code>required string id = 2;</code>
        */
       public Builder clearId() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        id_ = 0L;
+        id_ = getDefaultInstance().getId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *消息标识
+       * </pre>
+       *
+       * <code>required string id = 2;</code>
+       */
+      public Builder setIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        id_ = value;
         onChanged();
         return this;
       }
 
-      private int from_ = 0;
+      private long seq_ ;
       /**
        * <pre>
-       *发送模块
+       *消息序号
        * </pre>
        *
-       * <code>required .binary.wz.im.common.proto.InternalMsg.Module from = 3;</code>
+       * <code>optional int64 seq = 3;</code>
        */
-      public boolean hasFrom() {
+      public boolean hasSeq() {
         return ((bitField0_ & 0x00000004) != 0);
       }
       /**
        * <pre>
-       *发送模块
+       *消息序号
        * </pre>
        *
-       * <code>required .binary.wz.im.common.proto.InternalMsg.Module from = 3;</code>
+       * <code>optional int64 seq = 3;</code>
        */
-      public binary.wz.im.common.proto.Internal.InternalMsg.Module getFrom() {
-        @SuppressWarnings("deprecation")
-        binary.wz.im.common.proto.Internal.InternalMsg.Module result = binary.wz.im.common.proto.Internal.InternalMsg.Module.valueOf(from_);
-        return result == null ? binary.wz.im.common.proto.Internal.InternalMsg.Module.CONNECTOR : result;
+      public long getSeq() {
+        return seq_;
       }
       /**
        * <pre>
-       *发送模块
+       *消息序号
        * </pre>
        *
-       * <code>required .binary.wz.im.common.proto.InternalMsg.Module from = 3;</code>
+       * <code>optional int64 seq = 3;</code>
        */
-      public Builder setFrom(binary.wz.im.common.proto.Internal.InternalMsg.Module value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
+      public Builder setSeq(long value) {
         bitField0_ |= 0x00000004;
-        from_ = value.getNumber();
+        seq_ = value;
         onChanged();
         return this;
       }
       /**
        * <pre>
-       *发送模块
+       *消息序号
        * </pre>
        *
-       * <code>required .binary.wz.im.common.proto.InternalMsg.Module from = 3;</code>
+       * <code>optional int64 seq = 3;</code>
        */
-      public Builder clearFrom() {
+      public Builder clearSeq() {
         bitField0_ = (bitField0_ & ~0x00000004);
-        from_ = 0;
+        seq_ = 0L;
         onChanged();
         return this;
       }
 
-      private int dest_ = 0;
+      private java.lang.Object fromId_ = "";
       /**
        * <pre>
-       *接收模块
+       *发送者userId
        * </pre>
        *
-       * <code>required .binary.wz.im.common.proto.InternalMsg.Module dest = 4;</code>
+       * <code>optional string fromId = 4;</code>
        */
-      public boolean hasDest() {
+      public boolean hasFromId() {
         return ((bitField0_ & 0x00000008) != 0);
       }
       /**
        * <pre>
-       *接收模块
+       *发送者userId
        * </pre>
        *
-       * <code>required .binary.wz.im.common.proto.InternalMsg.Module dest = 4;</code>
+       * <code>optional string fromId = 4;</code>
        */
-      public binary.wz.im.common.proto.Internal.InternalMsg.Module getDest() {
-        @SuppressWarnings("deprecation")
-        binary.wz.im.common.proto.Internal.InternalMsg.Module result = binary.wz.im.common.proto.Internal.InternalMsg.Module.valueOf(dest_);
-        return result == null ? binary.wz.im.common.proto.Internal.InternalMsg.Module.CONNECTOR : result;
+      public java.lang.String getFromId() {
+        java.lang.Object ref = fromId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            fromId_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
        * <pre>
-       *接收模块
+       *发送者userId
        * </pre>
        *
-       * <code>required .binary.wz.im.common.proto.InternalMsg.Module dest = 4;</code>
+       * <code>optional string fromId = 4;</code>
        */
-      public Builder setDest(binary.wz.im.common.proto.Internal.InternalMsg.Module value) {
-        if (value == null) {
-          throw new NullPointerException();
+      public com.google.protobuf.ByteString
+          getFromIdBytes() {
+        java.lang.Object ref = fromId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          fromId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
         }
-        bitField0_ |= 0x00000008;
-        dest_ = value.getNumber();
+      }
+      /**
+       * <pre>
+       *发送者userId
+       * </pre>
+       *
+       * <code>optional string fromId = 4;</code>
+       */
+      public Builder setFromId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+        fromId_ = value;
         onChanged();
         return this;
       }
       /**
        * <pre>
-       *接收模块
+       *发送者userId
        * </pre>
        *
-       * <code>required .binary.wz.im.common.proto.InternalMsg.Module dest = 4;</code>
+       * <code>optional string fromId = 4;</code>
        */
-      public Builder clearDest() {
+      public Builder clearFromId() {
         bitField0_ = (bitField0_ & ~0x00000008);
-        dest_ = 0;
+        fromId_ = getDefaultInstance().getFromId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *发送者userId
+       * </pre>
+       *
+       * <code>optional string fromId = 4;</code>
+       */
+      public Builder setFromIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+        fromId_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object destId_ = "";
+      /**
+       * <pre>
+       *接收者userId
+       * </pre>
+       *
+       * <code>optional string destId = 5;</code>
+       */
+      public boolean hasDestId() {
+        return ((bitField0_ & 0x00000010) != 0);
+      }
+      /**
+       * <pre>
+       *接收者userId
+       * </pre>
+       *
+       * <code>optional string destId = 5;</code>
+       */
+      public java.lang.String getDestId() {
+        java.lang.Object ref = destId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            destId_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       *接收者userId
+       * </pre>
+       *
+       * <code>optional string destId = 5;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDestIdBytes() {
+        java.lang.Object ref = destId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          destId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       *接收者userId
+       * </pre>
+       *
+       * <code>optional string destId = 5;</code>
+       */
+      public Builder setDestId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        destId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *接收者userId
+       * </pre>
+       *
+       * <code>optional string destId = 5;</code>
+       */
+      public Builder clearDestId() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        destId_ = getDefaultInstance().getDestId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *接收者userId
+       * </pre>
+       *
+       * <code>optional string destId = 5;</code>
+       */
+      public Builder setDestIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        destId_ = value;
         onChanged();
         return this;
       }
@@ -1389,17 +1651,17 @@ public final class Internal {
        *发送时间
        * </pre>
        *
-       * <code>required int64 createTime = 5;</code>
+       * <code>required int64 createTime = 6;</code>
        */
       public boolean hasCreateTime() {
-        return ((bitField0_ & 0x00000010) != 0);
+        return ((bitField0_ & 0x00000020) != 0);
       }
       /**
        * <pre>
        *发送时间
        * </pre>
        *
-       * <code>required int64 createTime = 5;</code>
+       * <code>required int64 createTime = 6;</code>
        */
       public long getCreateTime() {
         return createTime_;
@@ -1409,10 +1671,10 @@ public final class Internal {
        *发送时间
        * </pre>
        *
-       * <code>required int64 createTime = 5;</code>
+       * <code>required int64 createTime = 6;</code>
        */
       public Builder setCreateTime(long value) {
-        bitField0_ |= 0x00000010;
+        bitField0_ |= 0x00000020;
         createTime_ = value;
         onChanged();
         return this;
@@ -1422,10 +1684,10 @@ public final class Internal {
        *发送时间
        * </pre>
        *
-       * <code>required int64 createTime = 5;</code>
+       * <code>required int64 createTime = 6;</code>
        */
       public Builder clearCreateTime() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ = (bitField0_ & ~0x00000020);
         createTime_ = 0L;
         onChanged();
         return this;
@@ -1437,17 +1699,17 @@ public final class Internal {
        *消息类型
        * </pre>
        *
-       * <code>required .binary.wz.im.common.proto.InternalMsg.MsgType msgType = 6;</code>
+       * <code>required .binary.wz.im.common.proto.InternalMsg.MsgType msgType = 7;</code>
        */
       public boolean hasMsgType() {
-        return ((bitField0_ & 0x00000020) != 0);
+        return ((bitField0_ & 0x00000040) != 0);
       }
       /**
        * <pre>
        *消息类型
        * </pre>
        *
-       * <code>required .binary.wz.im.common.proto.InternalMsg.MsgType msgType = 6;</code>
+       * <code>required .binary.wz.im.common.proto.InternalMsg.MsgType msgType = 7;</code>
        */
       public binary.wz.im.common.proto.Internal.InternalMsg.MsgType getMsgType() {
         @SuppressWarnings("deprecation")
@@ -1459,13 +1721,13 @@ public final class Internal {
        *消息类型
        * </pre>
        *
-       * <code>required .binary.wz.im.common.proto.InternalMsg.MsgType msgType = 6;</code>
+       * <code>required .binary.wz.im.common.proto.InternalMsg.MsgType msgType = 7;</code>
        */
       public Builder setMsgType(binary.wz.im.common.proto.Internal.InternalMsg.MsgType value) {
         if (value == null) {
           throw new NullPointerException();
         }
-        bitField0_ |= 0x00000020;
+        bitField0_ |= 0x00000040;
         msgType_ = value.getNumber();
         onChanged();
         return this;
@@ -1475,10 +1737,10 @@ public final class Internal {
        *消息类型
        * </pre>
        *
-       * <code>required .binary.wz.im.common.proto.InternalMsg.MsgType msgType = 6;</code>
+       * <code>required .binary.wz.im.common.proto.InternalMsg.MsgType msgType = 7;</code>
        */
       public Builder clearMsgType() {
-        bitField0_ = (bitField0_ & ~0x00000020);
+        bitField0_ = (bitField0_ & ~0x00000040);
         msgType_ = 0;
         onChanged();
         return this;
@@ -1490,17 +1752,17 @@ public final class Internal {
        *消息体
        * </pre>
        *
-       * <code>optional string msgBody = 7;</code>
+       * <code>optional string msgBody = 8;</code>
        */
       public boolean hasMsgBody() {
-        return ((bitField0_ & 0x00000040) != 0);
+        return ((bitField0_ & 0x00000080) != 0);
       }
       /**
        * <pre>
        *消息体
        * </pre>
        *
-       * <code>optional string msgBody = 7;</code>
+       * <code>optional string msgBody = 8;</code>
        */
       public java.lang.String getMsgBody() {
         java.lang.Object ref = msgBody_;
@@ -1521,7 +1783,7 @@ public final class Internal {
        *消息体
        * </pre>
        *
-       * <code>optional string msgBody = 7;</code>
+       * <code>optional string msgBody = 8;</code>
        */
       public com.google.protobuf.ByteString
           getMsgBodyBytes() {
@@ -1541,14 +1803,14 @@ public final class Internal {
        *消息体
        * </pre>
        *
-       * <code>optional string msgBody = 7;</code>
+       * <code>optional string msgBody = 8;</code>
        */
       public Builder setMsgBody(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000040;
+  bitField0_ |= 0x00000080;
         msgBody_ = value;
         onChanged();
         return this;
@@ -1558,10 +1820,10 @@ public final class Internal {
        *消息体
        * </pre>
        *
-       * <code>optional string msgBody = 7;</code>
+       * <code>optional string msgBody = 8;</code>
        */
       public Builder clearMsgBody() {
-        bitField0_ = (bitField0_ & ~0x00000040);
+        bitField0_ = (bitField0_ & ~0x00000080);
         msgBody_ = getDefaultInstance().getMsgBody();
         onChanged();
         return this;
@@ -1571,14 +1833,14 @@ public final class Internal {
        *消息体
        * </pre>
        *
-       * <code>optional string msgBody = 7;</code>
+       * <code>optional string msgBody = 8;</code>
        */
       public Builder setMsgBodyBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000040;
+  bitField0_ |= 0x00000080;
         msgBody_ = value;
         onChanged();
         return this;
@@ -1651,17 +1913,13 @@ public final class Internal {
   static {
     java.lang.String[] descriptorData = {
       "\n\'src/main/resources/proto/Internal.prot" +
-      "o\022\031binary.wz.im.common.proto\"\347\002\n\013Interna" +
-      "lMsg\022\017\n\007version\030\001 \002(\005\022\n\n\002id\030\002 \002(\003\022;\n\004fro" +
-      "m\030\003 \002(\0162-.binary.wz.im.common.proto.Inte" +
-      "rnalMsg.Module\022;\n\004dest\030\004 \002(\0162-.binary.wz" +
-      ".im.common.proto.InternalMsg.Module\022\022\n\nc" +
-      "reateTime\030\005 \002(\003\022?\n\007msgType\030\006 \002(\0162..binar" +
-      "y.wz.im.common.proto.InternalMsg.MsgType" +
-      "\022\017\n\007msgBody\030\007 \001(\t\"1\n\006Module\022\r\n\tCONNECTOR" +
-      "\020\000\022\014\n\010TRANSFER\020\001\022\n\n\006CLIENT\020\002\"(\n\007MsgType\022" +
-      "\t\n\005GREET\020\000\022\007\n\003ACK\020\001\022\t\n\005ERROR\020\002B\nB\010Intern" +
-      "al"
+      "o\022\031binary.wz.im.common.proto\"\347\001\n\013Interna" +
+      "lMsg\022\017\n\007version\030\001 \002(\005\022\n\n\002id\030\002 \002(\t\022\013\n\003seq" +
+      "\030\003 \001(\003\022\016\n\006fromId\030\004 \001(\t\022\016\n\006destId\030\005 \001(\t\022\022" +
+      "\n\ncreateTime\030\006 \002(\003\022?\n\007msgType\030\007 \002(\0162..bi" +
+      "nary.wz.im.common.proto.InternalMsg.MsgT" +
+      "ype\022\017\n\007msgBody\030\010 \001(\t\"(\n\007MsgType\022\t\n\005GREET" +
+      "\020\000\022\007\n\003ACK\020\001\022\t\n\005ERROR\020\002B\nB\010Internal"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1680,7 +1938,7 @@ public final class Internal {
     internal_static_binary_wz_im_common_proto_InternalMsg_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_binary_wz_im_common_proto_InternalMsg_descriptor,
-        new java.lang.String[] { "Version", "Id", "From", "Dest", "CreateTime", "MsgType", "MsgBody", });
+        new java.lang.String[] { "Version", "Id", "Seq", "FromId", "DestId", "CreateTime", "MsgType", "MsgBody", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

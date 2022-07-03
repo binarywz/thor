@@ -1,6 +1,7 @@
 package binary.wz.im.client.api;
 
 import binary.wz.im.common.proto.Chat;
+import binary.wz.im.common.proto.Notify;
 import io.netty.channel.ChannelHandlerContext;
 
 /**
@@ -15,10 +16,16 @@ public interface MsgListener {
     void online();
 
     /**
-     * read msg
+     * 为ChatMsg回复ACK消息
      * @param chatMsg
      */
-    void read(Chat.ChatMsg chatMsg);
+    void confirmChatMsg(Chat.ChatMsg chatMsg);
+
+    /**
+     * 为NotifyMsg回复ACK消息
+     * @param notifyMsg
+     */
+    void confirmNotifyMsg(Notify.NotifyMsg notifyMsg);
 
     /**
      * do when msg has been sent

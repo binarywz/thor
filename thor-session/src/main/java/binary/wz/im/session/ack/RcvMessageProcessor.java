@@ -1,4 +1,4 @@
-package binary.wz.im.session.processor;
+package binary.wz.im.session.ack;
 
 import binary.wz.im.common.constant.MsgVersion;
 import binary.wz.im.common.proto.Internal;
@@ -16,20 +16,22 @@ import java.util.function.Consumer;
  */
 public class RcvMessageProcessor {
 
-    private Long mid;
-    private Internal.InternalMsg.Module from;
-    private Internal.InternalMsg.Module dest;
+    private String id; // 消息全局唯一标识
+    private Long seq;  // 消息系列号
+    private String fromId; // 发送者
+    private String destId; // 接收者
     private ChannelHandlerContext ctx;
 
     private CompletableFuture<Void> future;
     private Message message;
     private Consumer<Message> consumer;
 
-    public RcvMessageProcessor(Long mid, Internal.InternalMsg.Module from, Internal.InternalMsg.Module dest,
+    public RcvMessageProcessor(String id, Long seq, String fromId, String destId,
                                ChannelHandlerContext ctx, Message message, Consumer<Message> consumer) {
-        this.mid = mid;
-        this.from = from;
-        this.dest = dest;
+        this.id = id;
+        this.seq = seq;
+        this.fromId = fromId;
+        this.destId = destId;
         this.ctx = ctx;
         this.message = message;
         this.consumer = consumer;
@@ -41,27 +43,8 @@ public class RcvMessageProcessor {
      *
      * @return
      */
-    public Void process() {
+    public void process() {
         consumer.accept(message);
-        return null;
-    }
-
-    /**
-     * 响应ACK
-     */
-    public void sendAck() {
-        if (ctx.channel().isOpen()) {
-            Internal.InternalMsg ack = Internal.InternalMsg.newBuilder()
-                    .setVersion(MsgVersion.V1.getVersion())
-                    .setId(IdWorker.snowGenId())
-                    .setFrom(from)
-                    .setDest(dest)
-                    .setCreateTime(System.currentTimeMillis())
-                    .setMsgType(Internal.InternalMsg.MsgType.ACK)
-                    .setMsgBody(String.valueOf(mid))
-                    .build();
-            ctx.writeAndFlush(ack);
-        }
     }
 
     public void complete() {
@@ -72,16 +55,16 @@ public class RcvMessageProcessor {
         return future;
     }
 
-    public Long getId() {
-        return mid;
+    public String getId() {
+        return id;
     }
 
-    public Internal.InternalMsg.Module getFrom() {
-        return from;
+    public String getFromId() {
+        return fromId;
     }
 
-    public Internal.InternalMsg.Module getDest() {
-        return dest;
+    public String getDestId() {
+        return destId;
     }
 
     public ChannelHandlerContext getCtx() {

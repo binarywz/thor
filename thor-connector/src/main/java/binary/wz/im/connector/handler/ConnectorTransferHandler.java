@@ -1,10 +1,9 @@
 package binary.wz.im.connector.handler;
 
 import binary.wz.im.common.constant.MsgVersion;
-import binary.wz.im.common.parser.MessageParser;
 import binary.wz.im.common.proto.Chat;
 import binary.wz.im.common.proto.Internal;
-import binary.wz.im.common.proto.State;
+import binary.wz.im.common.proto.Notify;
 import binary.wz.im.connector.context.ConnectorTransferContext;
 import binary.wz.im.connector.service.ConnectorDeliverService;
 import binary.wz.im.session.ack.SndAckWindow;
@@ -54,12 +53,10 @@ public class ConnectorTransferHandler extends SimpleChannelInboundHandler<Messag
 
     private void greetToTransfer(ChannelHandlerContext ctx) {
         Internal.InternalMsg greet = Internal.InternalMsg.newBuilder()
-                .setId(IdWorker.snowGenId())
+                .setId(IdWorker.UUID())
                 .setVersion(MsgVersion.V1.getVersion())
                 .setMsgType(Internal.InternalMsg.MsgType.GREET)
                 .setMsgBody(transferContext.getConnectorId())
-                .setFrom(Internal.InternalMsg.Module.CONNECTOR)
-                .setDest(Internal.InternalMsg.Module.TRANSFER)
                 .setCreateTime(System.currentTimeMillis())
                 .build();
         sndAckWindow.offer(greet.getId(), greet, ctx::writeAndFlush)
@@ -73,10 +70,6 @@ public class ConnectorTransferHandler extends SimpleChannelInboundHandler<Messag
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Message msg) throws Exception {
         logger.debug("ConnectorTransferHandler#channelRead0 receive msg:\r\n{}", msg.toString());
-
-        MessageParser.validateFrom(msg, Internal.InternalMsg.Module.TRANSFER);
-        MessageParser.validateDest(msg, Internal.InternalMsg.Module.CONNECTOR);
-
         transferMessageProcessor.process(msg, ctx);
     }
 
@@ -86,8 +79,8 @@ public class ConnectorTransferHandler extends SimpleChannelInboundHandler<Messag
             InternalMessageProcessor internalMessageProcessor = new InternalMessageProcessor(3);
             internalMessageProcessor.register(Internal.InternalMsg.MsgType.ACK, (m, ctx) -> sndAckWindow.ack(m));
 
-            register(Chat.ChatMsg.class, (m, ctx) -> connectorDeliverService.doChatToClient(m));
-            register(State.StateMsg.class, (m, ctx) -> connectorDeliverService.doSendStateToClient(m));
+            register(Chat.ChatMsg.class, (m, ctx) -> connectorDeliverService.doSendToClient(m));
+            register(Notify.NotifyMsg.class, (m, ctx) -> connectorDeliverService.doSendToClient(m));
             register(Internal.InternalMsg.class, internalMessageProcessor.generateFun());
         }
     }

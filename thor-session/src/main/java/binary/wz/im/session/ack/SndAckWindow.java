@@ -2,7 +2,6 @@ package binary.wz.im.session.ack;
 
 import binary.wz.im.common.exception.ImException;
 import binary.wz.im.common.proto.Internal;
-import binary.wz.im.session.processor.SndMessageProcessor;
 import com.google.protobuf.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +43,7 @@ public class SndAckWindow {
      * key: 消息Id
      * value: ack processor，处理未收到ack的消息
      */
-    private ConcurrentHashMap<Long, SndMessageProcessor<Internal.InternalMsg>> sndMsgProcessorMap;
+    private ConcurrentHashMap<String, SndMessageProcessor<Internal.InternalMsg>> sndMsgProcessorMap;
 
     static {
         windowMap = new ConcurrentHashMap<>();
@@ -68,7 +67,7 @@ public class SndAckWindow {
      * @param sndFunction
      * @return
      */
-    public static CompletableFuture<Internal.InternalMsg> offer(Serializable connectionId, Long mid, Message sndMessage, Consumer<Message> sndFunction) {
+    public static CompletableFuture<Internal.InternalMsg> offer(Serializable connectionId, String mid, Message sndMessage, Consumer<Message> sndFunction) {
         return windowMap.get(connectionId).offer(mid, sndMessage, sndFunction);
     }
 
@@ -80,7 +79,7 @@ public class SndAckWindow {
      * @param sndFunction
      * @return
      */
-    public CompletableFuture<Internal.InternalMsg> offer(Long mid, Message sndMessage, Consumer<Message> sndFunction) {
+    public CompletableFuture<Internal.InternalMsg> offer(String mid, Message sndMessage, Consumer<Message> sndFunction) {
         if (sndMsgProcessorMap.containsKey(mid)) {
             CompletableFuture<Internal.InternalMsg> future = new CompletableFuture<>();
             future.completeExceptionally(new ImException("send repeat msg id: " + mid));
@@ -102,7 +101,7 @@ public class SndAckWindow {
      * @param message
      */
     public void ack(Internal.InternalMsg message) {
-        Long id = Long.parseLong(message.getMsgBody());
+        String id = message.getMsgBody();
         logger.debug("get ack, msg: {}", id);
         if (sndMsgProcessorMap.containsKey(id)) {
             sndMsgProcessorMap.get(id).getFuture().complete(message);
@@ -129,7 +128,7 @@ public class SndAckWindow {
         }
     }
 
-    private void retry(Long id, SndMessageProcessor<?> processor) {
+    private void retry(String id, SndMessageProcessor<?> processor) {
         logger.warn("retry send msg: {}", id);
         processor.send();
     }
@@ -137,5 +136,4 @@ public class SndAckWindow {
     private boolean timeout(SndMessageProcessor processor) {
         return processor.getSndTime().get() != 0 && processor.timeElapse() > timeout.toNanos();
     }
-
 }

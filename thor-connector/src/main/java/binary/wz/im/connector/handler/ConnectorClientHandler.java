@@ -2,10 +2,9 @@ package binary.wz.im.connector.handler;
 
 import binary.wz.im.common.constant.MsgVersion;
 import binary.wz.im.common.exception.ImException;
-import binary.wz.im.common.parser.MessageParser;
 import binary.wz.im.common.proto.Chat;
 import binary.wz.im.common.proto.Internal;
-import binary.wz.im.common.proto.State;
+import binary.wz.im.common.proto.Notify;
 import binary.wz.im.connector.context.ClientConn;
 import binary.wz.im.connector.context.ClientConnContext;
 import binary.wz.im.connector.context.ConnectorTransferContext;
@@ -29,7 +28,7 @@ import java.util.function.Consumer;
 /**
  * @author binarywz
  * @date 2022/5/2 23:33
- * @description: 处理Client的消息
+ * @description: 处理Client的消息，Connector不维护消息的可靠性，仅提供消息通道
  */
 public class ConnectorClientHandler extends SimpleChannelInboundHandler<Message> {
     private final static Logger logger = LoggerFactory.getLogger(ConnectorClientHandler.class);
@@ -63,8 +62,6 @@ public class ConnectorClientHandler extends SimpleChannelInboundHandler<Message>
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Message msg) throws Exception {
         logger.info("connector-{} receive msg:\r\n{}", transferContext.getConnectorId(), msg.toString());
-        MessageParser.validateFrom(msg, Internal.InternalMsg.Module.CLIENT);
-        MessageParser.validateDest(msg, Internal.InternalMsg.Module.CONNECTOR);
         /**
          * 解析收到的消息，并根据不同的消息进行相应的处理
          */
@@ -119,19 +116,17 @@ public class ConnectorClientHandler extends SimpleChannelInboundHandler<Message>
              * 注册ACK消息处理器: 类比TCP协议的ACK，ACK报文不会重传，丢失之后由对方重发对应的消息
              * 处理ACK等待队列中消息m对应的事件，Internal.InternalMsg.MsgType.ACK为destId应答给fromId的ACK消息
              */
-            internalMessageProcessor.register(Internal.InternalMsg.MsgType.ACK, (m, ctx) -> sndAckWindow.ack(m));
+            internalMessageProcessor.register(Internal.InternalMsg.MsgType.ACK, (m, ctx) -> connectorDeliverService.doSendToClient(m));
 
             /**
              * 处理收到的聊天消息
              */
-            register(Chat.ChatMsg.class, (m, ctx) -> offerChat(m.getId(), m, ctx, ignore ->
-                    connectorDeliverService.doChatToClient(m)));
+            register(Chat.ChatMsg.class, (m, ctx) -> offerChat(m, ctx, ignore -> connectorDeliverService.doSendToTransfer(m)));
 
             /**
-             * 处理收到的状态消息,READ/DELIVERED消息
+             * 处理收到的通知消息,READ/DELIVERED消息
              */
-            register(State.StateMsg.class, (m, ctx) -> offerState(m.getId(), m, ctx, ignore ->
-                    connectorDeliverService.doSendStateToClient(m)));
+            register(Notify.NotifyMsg.class, (m, ctx) -> offerNotify(m, ctx, ignore -> connectorDeliverService.doSendToTransfer(m)));
 
             /**
              * 处理收到的内部消息,GREET/ACK消息
@@ -141,48 +136,41 @@ public class ConnectorClientHandler extends SimpleChannelInboundHandler<Message>
 
         /**
          * 处理收到的聊天消息
-         * @param mid
          * @param m
          * @param ctx
          * @param consumer
          */
-        private void offerChat(Long mid, Chat.ChatMsg m, ChannelHandlerContext ctx, Consumer<Message> consumer) {
+        private void offerChat(Chat.ChatMsg m, ChannelHandlerContext ctx, Consumer<Message> consumer) {
             Chat.ChatMsg copy = Chat.ChatMsg.newBuilder().mergeFrom(m).build();
-            offer(mid, copy, ctx, consumer);
+            offer(m.getId(), m.getSeq(), m.getFromId(), m.getDestId(), copy, ctx, consumer);
         }
 
         /**
-         * 处理收到的状态消息
-         * @param mid
+         * 处理收到的通知消息
          * @param m
          * @param ctx
          * @param consumer
          */
-        private void offerState(Long mid, State.StateMsg m, ChannelHandlerContext ctx, Consumer<Message> consumer) {
-            State.StateMsg copy = State.StateMsg.newBuilder().mergeFrom(m).buildPartial();
-            offer(mid, copy, ctx, consumer);
+        private void offerNotify(Notify.NotifyMsg m, ChannelHandlerContext ctx, Consumer<Message> consumer) {
+            Notify.NotifyMsg copy = Notify.NotifyMsg.newBuilder().mergeFrom(m).build();
+            offer(m.getId(), m.getSeq(), m.getFromId(), m.getDestId(), copy, ctx, consumer);
         }
 
-        private void offer(Long mid, Message m, ChannelHandlerContext ctx, Consumer<Message> consumer) {
+        private void offer(String mid, Long seq, String fromId, String destId, Message m, ChannelHandlerContext ctx, Consumer<Message> consumer) {
             if (sndAckWindow == null) {
                 throw new ImException("client not greet yet");
             }
-            rcvAckWindow.offer(mid,
-                    Internal.InternalMsg.Module.CONNECTOR,
-                    Internal.InternalMsg.Module.CLIENT,
-                    ctx, m, consumer);
+            rcvAckWindow.offer(mid, seq, fromId, destId, ctx, m, consumer);
         }
     }
 
-    private Internal.InternalMsg buildAck(Long id) {
+    private Internal.InternalMsg buildAck(String mid) {
         return Internal.InternalMsg.newBuilder()
                 .setVersion(MsgVersion.V1.getVersion())
-                .setId(IdWorker.snowGenId()) // ack消息丢失不会重传
-                .setFrom(Internal.InternalMsg.Module.CONNECTOR)
-                .setDest(Internal.InternalMsg.Module.CLIENT)
+                .setId(IdWorker.UUID()) // ack消息丢失不会重传
                 .setCreateTime(System.currentTimeMillis())
                 .setMsgType(Internal.InternalMsg.MsgType.ACK)
-                .setMsgBody(String.valueOf(id))
+                .setMsgBody(mid)
                 .build();
     }
 }

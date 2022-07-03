@@ -7,7 +7,9 @@ package binary.wz.im.common.domain.po;
  */
 public class OfflineMsg extends DbModel {
 
-    private Long msgId;
+    private String msgId;
+
+    private Long seq;
 
     private Integer msgCode;
 
@@ -25,11 +27,11 @@ public class OfflineMsg extends DbModel {
         this.hasRead = hasRead;
     }
 
-    public Long getMsgId() {
+    public String getMsgId() {
         return msgId;
     }
 
-    public void setMsgId(Long msgId) {
+    public void setMsgId(String msgId) {
         this.msgId = msgId;
     }
 
@@ -55,5 +57,13 @@ public class OfflineMsg extends DbModel {
 
     public void setContent(byte[] content) {
         this.content = content;
+    }
+
+    public Long getSeq() {
+        return seq;
+    }
+
+    public void setSeq(Long seq) {
+        this.seq = seq;
     }
 }

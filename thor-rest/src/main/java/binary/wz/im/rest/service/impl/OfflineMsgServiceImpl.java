@@ -4,7 +4,7 @@ import binary.wz.im.common.constant.MsgType;
 import binary.wz.im.common.domain.po.OfflineMsg;
 import binary.wz.im.common.exception.ImException;
 import binary.wz.im.common.proto.Chat;
-import binary.wz.im.common.proto.State;
+import binary.wz.im.common.proto.Notify;
 import binary.wz.im.rest.mapper.OfflineMsgMapper;
 import binary.wz.im.rest.service.OfflineMsgService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -33,10 +33,10 @@ public class OfflineMsgServiceImpl extends ServiceImpl<OfflineMsgMapper, Offline
     }
 
     @Override
-    public void saveState(State.StateMsg msg) {
+    public void saveNotify(Notify.NotifyMsg msg) {
         OfflineMsg offlineMsg = new OfflineMsg();
         offlineMsg.setMsgId(msg.getId());
-        offlineMsg.setMsgCode(MsgType.STATE.getCode());
+        offlineMsg.setMsgCode(MsgType.NOTIFY.getCode());
         offlineMsg.setToUserId(msg.getDestId());
         offlineMsg.setContent(msg.toByteArray());
         save(offlineMsg);

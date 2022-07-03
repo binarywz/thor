@@ -5,31 +5,28 @@ option java_outer_classname = "Internal";
 
 message InternalMsg {
     required int32 version = 1;
-    //协议版本号。第一版本：1，以此类推。
+    //协议版本号
 
-    required int64 id = 2;
-    //消息id
+    required string id = 2;
+    //消息标识
 
-    required Module from = 3;
-    //发送模块
+    optional int64 seq = 3;
+    //消息序号
 
-    required Module dest = 4;
-    //接收模块
+    optional string fromId = 4;
+    //发送者userId
 
-    required int64 createTime = 5;
+    optional string destId = 5;
+    //接收者userId
+
+    required int64 createTime = 6;
     //发送时间
 
-    required MsgType msgType = 6;
+    required MsgType msgType = 7;
     //消息类型
 
-    optional string msgBody = 7;
+    optional string msgBody = 8;
     //消息体
-
-    enum Module {
-        CONNECTOR = 0;
-        TRANSFER = 1;
-        CLIENT = 2;
-    }
 
     enum MsgType {
         GREET = 0;

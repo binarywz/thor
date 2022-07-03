@@ -3,7 +3,7 @@ package binary.wz.im.transfer.service;
 import binary.wz.im.common.constant.MsgVersion;
 import binary.wz.im.common.proto.Chat;
 import binary.wz.im.common.proto.Internal;
-import binary.wz.im.common.proto.State;
+import binary.wz.im.common.proto.Notify;
 import binary.wz.im.session.conn.Conn;
 import binary.wz.im.transfer.context.ConnectorConn;
 import binary.wz.im.session.util.IdWorker;
@@ -35,6 +35,21 @@ public class TransferService {
      */
     public void doChat(Chat.ChatMsg msg) {
         ConnectorConn conn = connContext.getConnByUserId(msg.getDestId());
+        Chat.ChatMsg copy = Chat.ChatMsg.newBuilder().mergeFrom(msg).setSeq(generateSeq(msg.getFromId(), msg.getDestId())).build();
+        if (conn != null) {
+            conn.getCtx().writeAndFlush(copy);
+        } else {
+            doOffline(msg);
+        }
+    }
+
+    /**
+     * 转发NOTIFY消息
+     * @param msg
+     */
+    public void doNotify(Notify.NotifyMsg msg) {
+        ConnectorConn conn = connContext.getConnByUserId(msg.getDestId());
+        Notify.NotifyMsg copy = Notify.NotifyMsg.newBuilder().mergeFrom(msg).setSeq(generateSeq(msg.getFromId(), msg.getDestId())).build();
         if (conn != null) {
             conn.getCtx().writeAndFlush(msg);
         } else {
@@ -43,16 +58,12 @@ public class TransferService {
     }
 
     /**
-     * 转发STATE消息
-     * @param msg
+     * 生成序列号
+     * @param fromId
+     * @param destId
      */
-    public void doSendState(State.StateMsg msg) {
-        ConnectorConn conn = connContext.getConnByUserId(msg.getDestId());
-        if (conn != null) {
-            conn.getCtx().writeAndFlush(msg);
-        } else {
-            doOffline(msg);
-        }
+    public Long generateSeq(String fromId, String destId) {
+        return 1L;
     }
 
     /**
@@ -72,15 +83,13 @@ public class TransferService {
         ctx.writeAndFlush(buildInternalAck(msg.getId()));
     }
 
-    private Internal.InternalMsg buildInternalAck(Long mid) {
+    private Internal.InternalMsg buildInternalAck(String mid) {
         return Internal.InternalMsg.newBuilder()
                 .setVersion(MsgVersion.V1.getVersion())
-                .setId(IdWorker.snowGenId()) // ACK消息丢失不需要重发
-                .setFrom(Internal.InternalMsg.Module.TRANSFER)
-                .setDest(Internal.InternalMsg.Module.CONNECTOR)
+                .setId(IdWorker.UUID()) // ACK消息丢失不需要重发
                 .setCreateTime(System.currentTimeMillis())
                 .setMsgType(Internal.InternalMsg.MsgType.ACK)
-                .setMsgBody(String.valueOf(mid))
+                .setMsgBody(mid)
                 .build();
     }
 
