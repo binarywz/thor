@@ -1,7 +1,6 @@
 package binary.wz.im.connector.handler;
 
 import binary.wz.im.common.constant.MsgVersion;
-import binary.wz.im.common.exception.ImException;
 import binary.wz.im.common.proto.Chat;
 import binary.wz.im.common.proto.Internal;
 import binary.wz.im.common.proto.Notify;
@@ -23,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
-import java.util.function.Consumer;
 
 /**
  * @author binarywz
@@ -61,7 +59,7 @@ public class ConnectorClientHandler extends SimpleChannelInboundHandler<Message>
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Message msg) throws Exception {
-        logger.info("connector-{} receive msg:\r\n{}", transferContext.getConnectorId(), msg.toString());
+        logger.info("ConnectorClientHandler#channelRead0 receive msg:\r\n{}", msg.toString());
         /**
          * 解析收到的消息，并根据不同的消息进行相应的处理
          */
@@ -121,46 +119,17 @@ public class ConnectorClientHandler extends SimpleChannelInboundHandler<Message>
             /**
              * 处理收到的聊天消息
              */
-            register(Chat.ChatMsg.class, (m, ctx) -> offerChat(m, ctx, ignore -> connectorDeliverService.doSendToTransfer(m)));
+            register(Chat.ChatMsg.class, (m, ctx) -> connectorDeliverService.doSendToTransfer(m));
 
             /**
              * 处理收到的通知消息,READ/DELIVERED消息
              */
-            register(Notify.NotifyMsg.class, (m, ctx) -> offerNotify(m, ctx, ignore -> connectorDeliverService.doSendToTransfer(m)));
+            register(Notify.NotifyMsg.class, (m, ctx) -> connectorDeliverService.doSendToTransfer(m));
 
             /**
              * 处理收到的内部消息,GREET/ACK消息
              */
             register(Internal.InternalMsg.class, internalMessageProcessor.generateFun());
-        }
-
-        /**
-         * 处理收到的聊天消息
-         * @param m
-         * @param ctx
-         * @param consumer
-         */
-        private void offerChat(Chat.ChatMsg m, ChannelHandlerContext ctx, Consumer<Message> consumer) {
-            Chat.ChatMsg copy = Chat.ChatMsg.newBuilder().mergeFrom(m).build();
-            offer(m.getId(), m.getSeq(), m.getFromId(), m.getDestId(), copy, ctx, consumer);
-        }
-
-        /**
-         * 处理收到的通知消息
-         * @param m
-         * @param ctx
-         * @param consumer
-         */
-        private void offerNotify(Notify.NotifyMsg m, ChannelHandlerContext ctx, Consumer<Message> consumer) {
-            Notify.NotifyMsg copy = Notify.NotifyMsg.newBuilder().mergeFrom(m).build();
-            offer(m.getId(), m.getSeq(), m.getFromId(), m.getDestId(), copy, ctx, consumer);
-        }
-
-        private void offer(String mid, Long seq, String fromId, String destId, Message m, ChannelHandlerContext ctx, Consumer<Message> consumer) {
-            if (sndAckWindow == null) {
-                throw new ImException("client not greet yet");
-            }
-            rcvAckWindow.offer(mid, seq, fromId, destId, ctx, m, consumer);
         }
     }
 

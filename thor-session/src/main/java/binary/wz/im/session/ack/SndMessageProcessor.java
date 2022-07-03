@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
@@ -23,6 +24,7 @@ public class SndMessageProcessor<T extends Message> {
 
     private volatile AtomicLong sndTime;
     private volatile AtomicBoolean sending;
+    private volatile AtomicInteger times;
 
     public SndMessageProcessor(Message sndMessage, Consumer<Message> sndFunction) {
         this.sndMessage = sndMessage;
@@ -30,6 +32,7 @@ public class SndMessageProcessor<T extends Message> {
         this.future = new CompletableFuture<>();
         this.sndTime = new AtomicLong(0);
         this.sending = new AtomicBoolean(false);
+        this.times = new AtomicInteger(0);
     }
 
     /**
@@ -42,10 +45,8 @@ public class SndMessageProcessor<T extends Message> {
                 sndFunction.accept(sndMessage);
             } catch (Exception e) {
                 logger.error("send msg failed, msg:{}", sndMessage, e);
-                this.sending.set(false);
             } finally {
-                // TODO 此处不该设置为false，应在捕获异常处理sending状态
-                // this.sending.set(false);
+                this.sending.set(false);
             }
         }
     }

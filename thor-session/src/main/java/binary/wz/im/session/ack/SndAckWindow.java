@@ -116,7 +116,7 @@ public class SndAckWindow {
      * 1.与TCP/IP一样不断发送直到收到ACK为止
      * 2.设置一个最大重试次数，超过这个次数还没收到ACK，就使用失败机制处理
      *
-     * // TODO 此处采用了第一种方式，第二种方式更为合理
+     * TODO 此处采用了第一种方式，第二种方式更为合理
      */
     private static void checkTimeoutAndRetry() {
         while (true) {

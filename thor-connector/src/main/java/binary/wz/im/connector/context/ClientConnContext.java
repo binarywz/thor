@@ -25,8 +25,6 @@ public class ClientConnContext extends MemoryConnContext<ClientConn> {
     }
 
     public ClientConn getConnByUserId(String userId) {
-        logger.debug("ClientConnContext#getConnByUserId userId: {}", userId);
-
         Serializable netId = userNetIdMap.get(userId);
         if (netId == null) {
             logger.debug("ClientConnContext#getConnByUserId netId not exist");
@@ -38,7 +36,7 @@ public class ClientConnContext extends MemoryConnContext<ClientConn> {
             userNetIdMap.remove(userId);
             return null;
         }
-        logger.debug("ClientConnContext#getConnByUserId found conn, userId:{}, connId: {}", userId, conn.getNetId());
+        logger.debug("ClientConnContext#getConnByUserId found conn, userId:{}, connId: {}\r\n", userId, conn.getNetId());
         return conn;
     }
 
