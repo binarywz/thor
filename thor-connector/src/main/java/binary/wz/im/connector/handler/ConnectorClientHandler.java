@@ -107,7 +107,7 @@ public class ConnectorClientHandler extends SimpleChannelInboundHandler<Message>
                 /**
                  * 为GREET消息响应ACK，消息体为此条GREET消息的ID
                  */
-                ctx.writeAndFlush(buildAck(m.getId()));
+                ctx.writeAndFlush(buildGreetAck(m.getId()));
             });
 
             /**
@@ -133,12 +133,12 @@ public class ConnectorClientHandler extends SimpleChannelInboundHandler<Message>
         }
     }
 
-    private Internal.InternalMsg buildAck(String mid) {
+    private Internal.InternalMsg buildGreetAck(String mid) {
         return Internal.InternalMsg.newBuilder()
                 .setVersion(MsgVersion.V1.getVersion())
                 .setId(IdWorker.UUID()) // ack消息丢失不会重传
                 .setCreateTime(System.currentTimeMillis())
-                .setMsgType(Internal.InternalMsg.MsgType.ACK)
+                .setMsgType(Internal.InternalMsg.MsgType.GREET)
                 .setMsgBody(mid)
                 .build();
     }

@@ -117,7 +117,8 @@ public class ClientConnectorHandler extends SimpleChannelInboundHandler<Message>
              * 处理内部消息
              */
             InternalMessageProcessor internalMessageProcessor = new InternalMessageProcessor(3);
-            internalMessageProcessor.register(Internal.InternalMsg.MsgType.ACK, (m, ctx) -> sndAckWindow.ack(m));
+            internalMessageProcessor.register(Internal.InternalMsg.MsgType.GREET, (m, ctx) -> sndAckWindow.poll(m));
+            internalMessageProcessor.register(Internal.InternalMsg.MsgType.ACK, (m, ctx) -> sndAckWindow.poll(m));
             internalMessageProcessor.register(Internal.InternalMsg.MsgType.ERROR, (m, ctx) ->
                     logger.error("[client] get error from connector {}", m.getMsgBody()));
             register(Internal.InternalMsg.class, internalMessageProcessor.generateFun());

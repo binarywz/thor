@@ -73,7 +73,6 @@ public class SndAckWindow {
 
     /**
      * 发送消息入队
-     * TODO mid使用UUID代替
      * @param mid
      * @param sndMessage
      * @param sndFunction
@@ -97,10 +96,10 @@ public class SndAckWindow {
     }
 
     /**
-     * 处理对应消息的ACK
+     * 消息出队
      * @param message
      */
-    public void ack(Internal.InternalMsg message) {
+    public void poll(Internal.InternalMsg message) {
         String id = message.getMsgBody();
         logger.debug("get ack, msg: {}", id);
         if (sndMsgProcessorMap.containsKey(id)) {

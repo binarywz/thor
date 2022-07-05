@@ -77,7 +77,8 @@ public class ConnectorTransferHandler extends SimpleChannelInboundHandler<Messag
         @Override
         public void registerProcessors() {
             InternalMessageProcessor internalMessageProcessor = new InternalMessageProcessor(3);
-            internalMessageProcessor.register(Internal.InternalMsg.MsgType.ACK, (m, ctx) -> sndAckWindow.ack(m));
+            internalMessageProcessor.register(Internal.InternalMsg.MsgType.GREET, (m, ctx) -> sndAckWindow.poll(m));
+            internalMessageProcessor.register(Internal.InternalMsg.MsgType.ACK, (m, ctx) -> connectorDeliverService.doSendToClient(m));
 
             register(Chat.ChatMsg.class, (m, ctx) -> connectorDeliverService.doSendToClient(m));
             register(Notify.NotifyMsg.class, (m, ctx) -> connectorDeliverService.doSendToClient(m));

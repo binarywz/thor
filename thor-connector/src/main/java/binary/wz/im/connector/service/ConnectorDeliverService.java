@@ -59,6 +59,7 @@ public class ConnectorDeliverService {
         /**
          * 发送消息给destId
          * 发送消息: Chat.ChatMsg/Notify.NotifyMsg
+         * TODO 第一点需确认
          * 1.若destId对应的连接不在本台服务器(用户原本在此在Connector，Transfer消息转发过来的时候用户离线)，则将消息发送至Transfer进行转发
          * 2.若destId对应的连接在本台服务器，则将消息直接发送至对应用户
          */
