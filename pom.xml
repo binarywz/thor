@@ -16,6 +16,7 @@
         <module>thor-connector</module>
         <module>thor-client</module>
         <module>thor-rest</module>
+        <module>thor-registry</module>
     </modules>
 
     <properties>
@@ -30,6 +31,7 @@
         <guice.version>4.2.2</guice.version>
         <rocksdb.version>5.5.1</rocksdb.version>
         <ratis.version>0.3.0</ratis.version>
+        <curator.version>5.3.0</curator.version>
     </properties>
 
     <dependencyManagement>
@@ -169,6 +171,11 @@
                 <artifactId>logging-interceptor</artifactId>
                 <version>3.12.0</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-framework</artifactId>
+                <version>${curator.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>binary.wz.im</groupId>
@@ -183,6 +190,16 @@
             <dependency>
                 <groupId>binary.wz.im</groupId>
                 <artifactId>thor-session</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>binary.wz.im</groupId>
+                <artifactId>thor-registry-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>binary.wz.im</groupId>
+                <artifactId>thor-registry-zookeeper</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

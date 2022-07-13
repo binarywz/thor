@@ -3,6 +3,9 @@ package binary.wz.im.transfer.remoting;
 import binary.wz.im.common.codec.MsgDecoder;
 import binary.wz.im.common.codec.MsgEncoder;
 import binary.wz.im.common.exception.ImException;
+import binary.wz.im.registry.domain.RegistryConfig;
+import binary.wz.im.registry.zookeeper.ZookeeperRegistry;
+import binary.wz.im.session.util.IdWorker;
 import binary.wz.im.transfer.config.TransferConfig;
 import binary.wz.im.transfer.handler.TransferConnectorHandler;
 import io.netty.bootstrap.ServerBootstrap;
@@ -16,7 +19,9 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -29,7 +34,15 @@ import java.util.concurrent.TimeoutException;
 public class TransferServer {
     private static Logger logger = LoggerFactory.getLogger(TransferServer.class);
 
-    public static void start() {
+    public static void start() throws UnknownHostException {
+        RegistryConfig config = new RegistryConfig(
+                TransferConfig.registryAddress,
+                InetAddress.getLocalHost().getHostAddress(),
+                TransferConfig.servicePort,
+                TransferConfig.serviceGroup,
+                TransferConfig.serviceToken, 1);
+        ZookeeperRegistry zookeeperRegistry = new ZookeeperRegistry(config);
+
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workGroup = new NioEventLoopGroup();
 
@@ -47,6 +60,7 @@ public class TransferServer {
                 });
         ChannelFuture future = bootstrap.bind(new InetSocketAddress(TransferConfig.port)).addListener(f -> {
             if (f.isSuccess()) {
+                zookeeperRegistry.register(IdWorker.UUID(), config);
                 logger.info("[transfer] start successful at port {}, waiting for connectors to connect...", TransferConfig.port);
             } else {
                 throw new ImException("[transfer] start failed");
