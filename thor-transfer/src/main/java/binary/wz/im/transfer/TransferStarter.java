@@ -14,7 +14,7 @@ public class TransferStarter {
 
     public static void main(String[] args) {
         try {
-            TransferServer.start();
+            new TransferServer().start();
         } catch (Exception e) {
             logger.error("[transfer] start failed", e);;
         }

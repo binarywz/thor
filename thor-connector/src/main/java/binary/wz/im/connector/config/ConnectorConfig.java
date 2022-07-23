@@ -21,6 +21,9 @@ public class ConnectorConfig {
     public final static Integer redisPort;
     public final static String redisPassword;
 
+    public final static String registryAddress;
+    public final static String serviceGroup;
+
     static {
         InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("connector.properties");
         Properties properties = new Properties();
@@ -34,6 +37,10 @@ public class ConnectorConfig {
         redisHost = properties.getProperty("redis.host");
         redisPort = Integer.parseInt(properties.getProperty("redis.port"));
         redisPassword = properties.getProperty("redis.password");
+
+        registryAddress = properties.getProperty("registry.address");
+        serviceGroup = properties.getProperty("registry.connector.service.group");
+
         System.setProperty("log.path", properties.getProperty("log.path"));
         System.setProperty("log.level", properties.getProperty("log.level"));
         injector = Guice.createInjector(new ConnectorModule());

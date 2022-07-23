@@ -2,10 +2,11 @@ package binary.wz.im.transfer.remoting;
 
 import binary.wz.im.common.codec.MsgDecoder;
 import binary.wz.im.common.codec.MsgEncoder;
+import binary.wz.im.common.constant.Constants;
 import binary.wz.im.common.exception.ImException;
 import binary.wz.im.registry.domain.RegistryConfig;
-import binary.wz.im.registry.zookeeper.ZookeeperRegistry;
-import binary.wz.im.session.util.IdWorker;
+import binary.wz.im.registry.domain.ServiceConfig;
+import binary.wz.im.registry.zookeeper.ZookeeperRegistryService;
 import binary.wz.im.transfer.config.TransferConfig;
 import binary.wz.im.transfer.handler.TransferConnectorHandler;
 import io.netty.bootstrap.ServerBootstrap;
@@ -34,15 +35,23 @@ import java.util.concurrent.TimeoutException;
 public class TransferServer {
     private static Logger logger = LoggerFactory.getLogger(TransferServer.class);
 
-    public static void start() throws UnknownHostException {
-        RegistryConfig config = new RegistryConfig(
-                TransferConfig.registryAddress,
+    private final ZookeeperRegistryService registryService;
+    private final RegistryConfig registryConfig;
+    private final ServiceConfig serviceConfig;
+
+    public TransferServer() throws UnknownHostException {
+        this.registryConfig = new RegistryConfig(TransferConfig.registryAddress);
+        this.serviceConfig = new ServiceConfig(
                 InetAddress.getLocalHost().getHostAddress(),
                 TransferConfig.servicePort,
                 TransferConfig.serviceGroup,
-                TransferConfig.serviceToken, 1);
-        ZookeeperRegistry zookeeperRegistry = new ZookeeperRegistry(config);
+                TransferConfig.serviceToken,
+                Constants.SERVICE_ONLINE,
+                Constants.TRANSFER);
+        this.registryService = new ZookeeperRegistryService(registryConfig, serviceConfig);
+    }
 
+    public void start() {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workGroup = new NioEventLoopGroup();
 
@@ -60,7 +69,7 @@ public class TransferServer {
                 });
         ChannelFuture future = bootstrap.bind(new InetSocketAddress(TransferConfig.port)).addListener(f -> {
             if (f.isSuccess()) {
-                zookeeperRegistry.register(IdWorker.UUID(), config);
+                registryService.register(serviceConfig.getKey(), serviceConfig);
                 logger.info("[transfer] start successful at port {}, waiting for connectors to connect...", TransferConfig.port);
             } else {
                 throw new ImException("[transfer] start failed");
@@ -68,8 +77,19 @@ public class TransferServer {
         });
         try {
             future.get(10, TimeUnit.SECONDS);
+            registerShutDownHook();
         } catch (InterruptedException | ExecutionException | TimeoutException exception) {
             throw new ImException("[transfer] start failed");
         }
+    }
+
+    private void registerShutDownHook() {
+        Runtime.getRuntime().addShutdownHook(new Thread(this::close));
+        logger.warn("[TransferServer] registerShutDownHook success");
+    }
+
+    private void close() {
+        logger.warn("[TransferServer] closed...");
+        registryService.unregister(serviceConfig.getKey());
     }
 }

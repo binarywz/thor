@@ -10,7 +10,7 @@ import binary.wz.im.connector.remoting.ConnectorServer;
  */
 public class ConnectorStarter {
     public static void main(String[] args) {
-        ConnectorClient.start();
+        new ConnectorClient().start();
         ConnectorServer.start();
     }
 }

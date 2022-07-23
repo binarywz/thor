@@ -22,6 +22,10 @@
             <artifactId>curator-framework</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-recipes</artifactId>
+        </dependency>
+        <dependency>
             <groupId>binary.wz.im</groupId>
             <artifactId>thor-registry-api</artifactId>
         </dependency>

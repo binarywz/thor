@@ -82,6 +82,10 @@
             <groupId>binary.wz.im</groupId>
             <artifactId>thor-session</artifactId>
         </dependency>
+        <dependency>
+            <groupId>binary.wz.im</groupId>
+            <artifactId>thor-registry-zookeeper</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
