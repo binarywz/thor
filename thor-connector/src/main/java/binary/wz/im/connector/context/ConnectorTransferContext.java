@@ -1,13 +1,14 @@
 package binary.wz.im.connector.context;
 
+import binary.wz.im.session.conn.Conn;
 import binary.wz.im.session.util.IdWorker;
 import com.google.inject.Singleton;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author binarywz
@@ -25,7 +26,7 @@ public class ConnectorTransferContext {
     private final String connectorId;
 
     public ConnectorTransferContext() {
-        this.ctxList = new ArrayList<>();
+        this.ctxList = new CopyOnWriteArrayList<>();
         this.connectorId = IdWorker.UUID();
     }
 
@@ -62,6 +63,7 @@ public class ConnectorTransferContext {
      * @param ctx
      */
     public synchronized void removeTransferCtx(ChannelHandlerContext ctx) {
+        logger.warn("[ConnectorTransferContext] removeTransferCtx, netId: {}", ctx.channel().attr(Conn.NET_ID).get());
         this.ctxList.remove(ctx);
     }
 }

@@ -88,6 +88,6 @@ public class ServiceConfig implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("host:%s, port:%s", this.host, this.port);
+        return String.format("host:%s, port:%s, group:%s, status:%d", this.host, this.port, this.group, this.status);
     }
 }

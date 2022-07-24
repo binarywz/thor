@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
  * @author binarywz
  * @date 2022/4/25 22:58
  * @description: Transfer针对Connector连接的处理器
- * TODO 没有消息收发窗口
  */
 public class TransferConnectorHandler extends SimpleChannelInboundHandler<Message> {
     private static final Logger logger = LoggerFactory.getLogger(TransferConnectorHandler.class);
@@ -42,6 +41,7 @@ public class TransferConnectorHandler extends SimpleChannelInboundHandler<Messag
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        logger.warn("[TransferConnectorHandler] channelInactive...");
         connContext.removeConn(ctx);
     }
 

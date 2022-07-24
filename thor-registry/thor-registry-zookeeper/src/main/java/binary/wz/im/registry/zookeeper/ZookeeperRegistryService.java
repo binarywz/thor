@@ -31,6 +31,8 @@ public class ZookeeperRegistryService implements RegistryService {
 
     private final static String PATH_SEPARATOR = "/";
 
+    private final static Integer SERVICE_OFFLINE = 0;
+
     private final String SERVICE_PATH;
 
     private final String SERVICE_GROUP;
@@ -92,9 +94,13 @@ public class ZookeeperRegistryService implements RegistryService {
                 ChildData childData = event.getData();
                 if (childData == null) return;
                 ServiceConfig config = objectMapper.readValue(childData.getData(), ServiceConfig.class);
+                if (event.getType().equals(PathChildrenCacheEvent.Type.CHILD_REMOVED)) {
+                    config.setStatus(SERVICE_OFFLINE);
+                }
                 this.notifyListener.notify(config);
             });
-            pathChildrenCache.start(PathChildrenCache.StartMode.BUILD_INITIAL_CACHE);
+            // pathChildrenCache.start(PathChildrenCache.StartMode.BUILD_INITIAL_CACHE);
+            pathChildrenCache.start();
         } catch (Exception e) {
             logger.error("Failed to subscribe, cause: {}", e.getMessage(), e);
         }

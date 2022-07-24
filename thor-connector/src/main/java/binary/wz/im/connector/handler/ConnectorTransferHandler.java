@@ -32,6 +32,7 @@ public class ConnectorTransferHandler extends SimpleChannelInboundHandler<Messag
     private TransferMessageProcessor transferMessageProcessor;
     private ConnectorDeliverService connectorDeliverService;
     private ConnectorTransferContext transferContext;
+    private ChannelHandlerContext transferCtx;
 
     @Inject
     public ConnectorTransferHandler(ConnectorDeliverService connectorDeliverService, ConnectorTransferContext transferContext) {
@@ -49,6 +50,7 @@ public class ConnectorTransferHandler extends SimpleChannelInboundHandler<Messag
         greetToTransfer(ctx);
 
         transferContext.addTransferCtx(ctx);
+        this.transferCtx = ctx;
     }
 
     private void greetToTransfer(ChannelHandlerContext ctx) {
@@ -73,6 +75,27 @@ public class ConnectorTransferHandler extends SimpleChannelInboundHandler<Messag
         transferMessageProcessor.process(msg, ctx);
     }
 
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        logger.warn("[ConnectorTransferHandler] channelInactive...");
+    }
+
+    /**
+     * 设置当前连接的connectionId
+     * @param ctx
+     */
+    private void setConnectionId(ChannelHandlerContext ctx) {
+        ctx.channel().attr(Conn.NET_ID).set(IdWorker.UUID());
+    }
+
+    /**
+     * 获取连接Transfer的ctx
+     * @return
+     */
+    public ChannelHandlerContext getTransferCtx() {
+        return transferCtx;
+    }
+
     class TransferMessageProcessor extends AbstractMessageProcessor {
         @Override
         public void registerProcessors() {
@@ -84,13 +107,5 @@ public class ConnectorTransferHandler extends SimpleChannelInboundHandler<Messag
             register(Notify.NotifyMsg.class, (m, ctx) -> connectorDeliverService.doSendToClient(m));
             register(Internal.InternalMsg.class, internalMessageProcessor.generateFun());
         }
-    }
-
-    /**
-     * 设置当前连接的connectionId
-     * @param ctx
-     */
-    private void setConnectionId(ChannelHandlerContext ctx) {
-        ctx.channel().attr(Conn.NET_ID).set(IdWorker.UUID());
     }
 }
